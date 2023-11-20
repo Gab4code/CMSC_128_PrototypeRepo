@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,7 +21,7 @@ class Home_contentPage extends StatefulWidget {
 
 class _Home_contentPageState extends State<Home_contentPage> {
   final currentUser = FirebaseAuth.instance.currentUser!;
-  
+  bool _showImage = false;
   
 
 
@@ -48,21 +49,62 @@ class _Home_contentPageState extends State<Home_contentPage> {
                       Text(userData["username"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50),),
                         
                       
-                      ElevatedButton(onPressed: () {}, child: Text("Greet Happy birthday"))
+                      ElevatedButton(onPressed: () {
+                        setState((){
+                          _showImage = !_showImage;
+                        });
+                      }, child: Text('Celebrate'))
                     ],
                   ),
+                  
                 ),
+              
+                
               );
             } else if (snapshot.hasError) {
                 return Center(child: Text('Error${snapshot.error}')
                 );
             }
-
+            
+              
+            
             return const Center(
               child: CircularProgressIndicator(),
             );
+            
           },
+        ),
+        
+
+        bottomNavigationBar: _showImage
+        ? Container(
+          color: Colors.grey[200],
+          height: 150,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              
+                Image.network(
+                  'https://i.pinimg.com/originals/48/c9/52/48c9522aaa31a27582216bec737e92ce.gif',
+                  height: 80,
+                  width: 80,
+                ),
+
+                SizedBox(height: 8),
+
+                Text("Happy Birthday! ${currentUser.email!.split('@')[0]}",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),)
+              
+            ],
+          ),
         )
+        : SizedBox(),
+        
+        
+        
         // appBar: AppBar(
         //   body: Co
         //   title: Text('Add Sensor',
@@ -71,6 +113,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
         //   elevation: 0,
         // ),
         );
+        
   }
 }
 
