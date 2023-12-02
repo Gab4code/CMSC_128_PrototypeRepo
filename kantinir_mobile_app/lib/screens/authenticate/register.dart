@@ -19,11 +19,22 @@ class _RegisterState extends State<Register> {
   // key to associate data
   final _formKey = GlobalKey<FormState>();
 
+  String? _errorMessage;
+  void _handleRegisterError(String errorMessage) {
+    setState(() {
+      _errorMessage = errorMessage.replaceAllMapped(RegExp(r'\[[^\]]*\]'), (match) {
+      return ''; // Replace the matched content with an empty string
+      });
+    });
+  }
+
+
   // text field state
   String email = '';
   String password = '';
   String fcolor = '';
-  // error state
+  String password1 = '';
+  String confirmPassword = '';
   String error = '';
 
   @override
@@ -66,9 +77,22 @@ class _RegisterState extends State<Register> {
                 validator: (val) =>
                     val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                 onChanged: (val) {
-                  setState(() => password = val);
+                  setState(() => password1 = val);
                 },
               ),
+              SizedBox(height: 20.0),
+                  TextFormField(
+                    decoration: textInputDecoration.copyWith(
+                      hintText: 'Retype your password',
+                      fillColor: Color.fromARGB(255, 235, 235, 235),
+                    ),
+                    obscureText: true,
+                    validator: (val) =>
+                        val != password1 ? 'Passwords do not match' : null,
+                    onChanged: (val) {
+                      setState(() => confirmPassword = val);
+                    },
+                  ),
               SizedBox(height: 20.0),
               TextFormField(
                 decoration: textInputDecoration.copyWith(
@@ -85,13 +109,13 @@ class _RegisterState extends State<Register> {
                     backgroundColor: Color.fromARGB(255, 0, 113, 62)),
                 child: Text('Register',
                     style: const TextStyle(color: Colors.white)),
-                onPressed: () async {
+                onPressed: () async { 
                   if (_formKey.currentState!.validate()) {
                     dynamic result = await _auth.registerWithEmailAndPassword(     //Changed result to usercreds
-                        email, password, fcolor);
+                        email, confirmPassword, fcolor, _handleRegisterError);
                     
                     if (result == null) {
-                      setState(() => error = 'Please supply a valid email.');
+                      setState(() => error = _errorMessage!);
                     }
                   }
                 },
@@ -108,3 +132,5 @@ class _RegisterState extends State<Register> {
     );
   }
 }
+
+
