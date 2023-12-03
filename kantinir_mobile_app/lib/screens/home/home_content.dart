@@ -46,7 +46,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
                 child: Center(
                   child: Column(
                     children: [
-                      Text(userData["username"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50),),
+                      Text("Welcome, "+userData["username"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50),),
                         
                       
                       ElevatedButton(onPressed: () {

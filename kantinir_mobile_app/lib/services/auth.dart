@@ -42,7 +42,7 @@ class AuthService {
   }
 
   // register with email & password
-  Future registerWithEmailAndPassword(String email, String password, String fcolor, Function(String)? errorCallback) async {
+  Future registerWithEmailAndPassword(String email, String username ,String password, String fcolor, String bday, String education,Function(String)? errorCallback) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -52,7 +52,9 @@ class AuthService {
         .collection("Users")
         .doc(result.user!.email)
         .set({
-          'username' :email.split('@')[0],  // initial user
+          'username' :username,  // initial user
+          'birthdate':bday,
+          'education':education,
           'fcolor'   :fcolor,
             //add more fields
           });
