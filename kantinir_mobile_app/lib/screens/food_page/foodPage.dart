@@ -45,24 +45,41 @@ class _FoodPageState extends State<FoodPage> {
                       itemBuilder: (context, index) {
                         final DocumentSnapshot records =
                             snapshots.data!.docs[index];
-                        return Slidable(
-                          startActionPane:
-                              ActionPane(motion: StretchMotion(), children: [
-                            // SlidableAction(
-                            //   onPressed: (context) {
-                            //     navigateToNewPage(context);
-                            //   },
-                            //   icon: Icons.phone,
-                            //   backgroundColor: Colors.blue,
-                            // )
-                          ]),
-                          child: ListTile(
-                            title: Text(records["name"]),
-                            subtitle: Text(records["owner"] +
-                                '\n' +
-                                (records["fb link"]) +
-                                '\n' +
-                                (records["location"])),
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, records["name"]);
+                            },
+                            child: Slidable(
+                              startActionPane:
+                                  ActionPane(motion: StretchMotion(), children: [
+                                // SlidableAction(
+                                //   onPressed: (context) {
+                                //     navigateToNewPage(context);
+                                //   },
+                                //   icon: Icons.phone,
+                                //   backgroundColor: Colors.blue,
+                                // )
+                              ]),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: ListTile(
+                                  title: Text(records["name"]),
+                                  subtitle: Text(records["owner"] +
+                                      '\n' +
+                                      (records["fb link"]) +
+                                      '\n' +
+                                      (records["location"])),
+                                ),
+                              ),
+                            ),
                           ),
                         );
                       },

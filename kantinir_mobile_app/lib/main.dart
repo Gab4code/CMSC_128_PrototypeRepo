@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/sign_in.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee_miagao.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/aj_foodhub.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/el_garaje.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/kubo_resto.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse_&_coffee.dart';
 import 'package:kantinir_mobile_app/screens/home/profile_page.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housingPage.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +40,26 @@ class MyApp extends StatelessWidget {
       initialData: null,
       value: AuthService().user,
       child: MaterialApp(
+        onGenerateRoute: (settings) {
+          if (settings.name != null) {
+            return MaterialPageRoute(
+              builder: (context) {
+                if (settings.name == 'El Garaje') {
+                  return elGarajePage();
+                } else if (settings.name == 'Kubo Resto') {
+                  return kuboRestoPage();
+                } else if (settings.name == 'A & J Food Hub') {
+                  return ajFoodHubPage();
+                } else if (settings.name == '48 Coffee.Co Miagao') {
+                  return coffee48MiagaoPage();
+                } else if (settings.name == 'Mr. J Chicken House and Cafe') {
+                  return mrJChickenHouseCoffee();
+                }
+                return Wrapper();
+              }
+            );
+          }
+        },
         debugShowCheckedModeBanner: false,
         home: Wrapper(),
         routes: {
