@@ -1,14 +1,173 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class mrJChickenHouseCoffee extends StatelessWidget {
-  const mrJChickenHouseCoffee({super.key});
+  mrJChickenHouseCoffee({super.key});
+final currentUser = FirebaseAuth.instance.currentUser!;
+  final TextEditingController commentController = TextEditingController();
+  double rating = 0;
+
+  Future<String?> getUsernameFromEmail(String email) async {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser.email)
+        .get();
+
+      if (snapshot.exists) {
+        return snapshot['username'];
+      } else {
+        return null;
+      }
+    }
+
+  Future<void> submitReview(BuildContext context) async {
+    String? userEmail = currentUser.email;
+    String? username = await getUsernameFromEmail(userEmail!);
+    
+
+
+    Map<String, dynamic> reviewData = {
+      'userId' : username,
+      'rating' : rating,
+      'comment' : commentController.text,
+    };
+
+    // Store the review in Firebase
+    FirebaseFirestore.instance.collection('kaon').doc('5').collection("reviews").add(reviewData);
+    
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mr. J Chicken House and Cafe"),
+        title: Text('Mr. J Chicken House & Coffee'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+                image: DecorationImage(
+                  image: AssetImage('assets/your_image.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(height: 20), // Add spacing between image and paragraph
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'This is a paragraph describing Mr. J Chicken House & Coffee. Add your text here.',
+                textAlign: TextAlign.justify,
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 20), // Add spacing between paragraph and "Menu" header
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Menu',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            // Add menu items or further widgets below as needed
+
+            SizedBox(height: 20), // Add spacing between menu and "Review" header
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Review',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(height: 10), // Add spacing between "Review" header and review section
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Text(
+                    'Been here?',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 5), // Add spacing between "Been here?" and "Leave a review"
+                  GestureDetector(
+                    onTap: () {
+                      // Add code to show a review dialogue
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Leave a review'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                RatingBar.builder(
+                                  initialRating: rating,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber
+                                  ),
+                                  onRatingUpdate: (value) {
+                                    rating = value;
+                                  },
+                                ),
+                                TextFormField(
+                                  controller: commentController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Write your review here',
+                                  ),
+                                  maxLines: 3,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => submitReview(context),
+                                child: Text('Submit'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancel'),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text(
+                      'Leave a review',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
