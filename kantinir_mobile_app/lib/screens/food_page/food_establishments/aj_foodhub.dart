@@ -166,6 +166,137 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                 ],
               ),
             ),
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('kaon')
+                  .doc('3')
+                  .collection('reviews')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+
+                if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                  String? userEmail = currentUser.email;
+                  return FutureBuilder<String?>(
+                    future: getUsernameFromEmail(userEmail!), // Assuming `currentUser` is defined somewhere
+                    builder: (context, usernameSnapshot) {
+                      if (usernameSnapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
+
+                      final currentUsername = usernameSnapshot.data;
+
+                      return Column(
+                        children: snapshot.data!.docs.map((document) {
+                          var data = document.data() as Map<String, dynamic>;
+                          double rating = data['rating'].toDouble(); // Convert rating to double
+                          String userId = data['userId'];
+
+                          bool isCurrentUser = currentUsername == userId;
+
+                          return Container(
+                            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+                            padding: EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Stack(
+                              children: [
+                                ListTile(
+                                  title: Text('Username: $userId'),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text('Rating: '),
+                                          RatingBar.builder(
+                                            initialRating: rating,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemSize: 20,
+                                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            onRatingUpdate: (value) {},
+                                          ),
+                                        ],
+                                      ),
+                                      Text('Comment: ${data['comment']}'),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 4.0,
+                                  right: 4.0,
+                                  child: isCurrentUser
+                                      ? IconButton(
+                                          icon: Icon(Icons.close),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text('Confirmation'),
+                                                  content: Text('Are you sure you want to remove this comment?'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        FirebaseFirestore.instance
+                                                            .collection('kaon')
+                                                            .doc('3')
+                                                            .collection('reviews')
+                                                            .doc(document.id)
+                                                            .delete();
+
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Remove'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        )
+                                      : SizedBox.shrink(),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  );
+                }
+
+                return Center(child: Text(
+                  'No reviews yet.',
+                  
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                  ));
+              },
+            ),
+            
           ],
         ),
       ),
