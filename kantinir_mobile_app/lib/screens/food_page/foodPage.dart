@@ -13,18 +13,17 @@ import '../food_page/foodPage.dart';
 import '../housing_page/housingPage.dart';
 
 class FoodPage extends StatefulWidget {
-  const FoodPage({super.key});
+  const FoodPage({Key? key}) : super(key: key);
 
   @override
   State<FoodPage> createState() => _FoodPageState();
 }
 
 class _FoodPageState extends State<FoodPage> {
+  final CollectionReference _kaon = FirebaseFirestore.instance.collection("kaon");
+
   @override
   Widget build(BuildContext context) {
-    final CollectionReference _kaon =
-        FirebaseFirestore.instance.collection("kaon");
-
     return Scaffold(
       body: Center(
         child: Column(
@@ -43,44 +42,45 @@ class _FoodPageState extends State<FoodPage> {
                     return ListView.builder(
                       itemCount: snapshots.data!.docs.length,
                       itemBuilder: (context, index) {
-                        final DocumentSnapshot records =
-                            snapshots.data!.docs[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, records["name"]);
-                            },
-                            child: Slidable(
-                              startActionPane:
-                                  ActionPane(motion: StretchMotion(), children: [
-                                // SlidableAction(
-                                //   onPressed: (context) {
-                                //     navigateToNewPage(context);
-                                //   },
-                                //   icon: Icons.phone,
-                                //   backgroundColor: Colors.blue,
-                                // )
-                              ]),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
+                        final DocumentSnapshot records = snapshots.data!.docs[index];
+                        final reviewsCollection = records.reference.collection('reviews');
+
+                        return StreamBuilder<double>(
+                          stream: getAverageRatingStream(reviewsCollection, records.reference),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+                            if (snapshot.hasData) {
+                              final averageRating = snapshot.data!;
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, records["name"]);
+                                  },
+                                  child: Slidable(
+                                    startActionPane: ActionPane(motion: StretchMotion(), children: []),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: ListTile(
+                                        title: Text(records["name"]),
+                                        subtitle: Text(records["owner"] + '\n' + (records["fb link"]) + '\n' + (records["location"])),
+                                        trailing: Text('Average Rating: ${averageRating.toStringAsFixed(1)}'),
+                                      ),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                child: ListTile(
-                                  title: Text(records["name"]),
-                                  subtitle: Text(records["owner"] +
-                                      '\n' +
-                                      (records["fb link"]) +
-                                      '\n' +
-                                      (records["location"])),
-                                ),
-                              ),
-                            ),
-                          ),
+                              );
+                            }
+                            return Container(); // Placeholder while waiting for rating
+                          },
                         );
                       },
                     );
@@ -94,13 +94,29 @@ class _FoodPageState extends State<FoodPage> {
           ],
         ),
       ),
-      // appBar: AppBar(
-      //   body: Co
-      //   title: Text('Add Sensor',
-      //       style: TextStyle(color: Colors.black), textAlign: TextAlign.center),
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),
     );
   }
+
+  Stream<double> getAverageRatingStream(CollectionReference reviewsCollection, DocumentReference documentReference) {
+  return reviewsCollection.snapshots().map((snapshot) {
+    if (snapshot.docs.isEmpty) {
+      return 0.0;
+    }
+
+    double totalRating = 0;
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      if (data != null && data is Map<String, dynamic> && data.containsKey('rating')) {
+        final rating = data['rating'];
+        if (rating is num) {
+          totalRating += rating.toDouble(); // Assuming rating is a numeric value
+        }
+      }
+    }
+
+    final averageRating = totalRating / snapshot.docs.length;
+    documentReference.update({'averageRating': averageRating}); // Update Firestore with the average rating
+    return averageRating;
+  });
+}
 }
