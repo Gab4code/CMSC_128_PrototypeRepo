@@ -8,6 +8,11 @@ import 'package:kantinir_mobile_app/screens/food_page/food_establishments/kubo_r
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse_&_coffee.dart';
 import 'package:kantinir_mobile_app/screens/home/profile_page.dart';
 import 'package:kantinir_mobile_app/screens/housing_page/housingPage.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/arkids_dorm.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/gumamela.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/kp_vision.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/lampirong.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/royal_angels_dorm.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +59,16 @@ class MyApp extends StatelessWidget {
                   return coffee48MiagaoPage();
                 } else if (settings.name == 'Mr. J Chicken House and Cafe') {
                   return mrJChickenHouseCoffee();
+                } else if (settings.name == 'Arkids Dorm') {
+                  return arkidsDormPage();
+                } else if (settings.name == 'KP Vision Boarding House') {
+                  return kpVisionPage();
+                } else if (settings.name == 'Royal Angels Deluxe Dormtelle') {
+                  return royalAngelsPage();
+                } else if (settings.name == 'Balay Lampirong UPV dorm') {
+                  return lampirongPage();
+                } else if (settings.name == 'Balay Gumamela UPV dorm') {
+                  return gumamelaPage();
                 }
                 return Wrapper();
               }
