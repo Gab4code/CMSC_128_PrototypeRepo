@@ -46,7 +46,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
                 child: Center(
                   child: Column(
                     children: [
-                      Text("Welcome, "+userData["username"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50),),
+                      Text("Welcome, "+userData["username"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
                         
                       
                       ElevatedButton(onPressed: () {
@@ -85,7 +85,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
             children: [
               
                 Image.network(
-                  'https://i.pinimg.com/originals/48/c9/52/48c9522aaa31a27582216bec737e92ce.gif',
+                  'https://media.tenor.com/RcX3hUY425kAAAAi/toothless-dragon-toothless.gif',
                   height: 80,
                   width: 80,
                 ),
