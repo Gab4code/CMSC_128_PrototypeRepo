@@ -6,7 +6,6 @@ import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/shared/constants.dart';
 
-
 class Register extends StatefulWidget {
   final Function toggleView;
   Register({super.key, required this.toggleView});
@@ -24,12 +23,12 @@ class _RegisterState extends State<Register> {
   String? _errorMessage;
   void _handleRegisterError(String errorMessage) {
     setState(() {
-      _errorMessage = errorMessage.replaceAllMapped(RegExp(r'\[[^\]]*\]'), (match) {
-      return ''; // Replace the matched content with an empty string
+      _errorMessage =
+          errorMessage.replaceAllMapped(RegExp(r'\[[^\]]*\]'), (match) {
+        return ''; // Replace the matched content with an empty string
       });
     });
   }
-
 
   // text field state
   String email = '';
@@ -65,53 +64,118 @@ class _RegisterState extends State<Register> {
     'blue',
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 200, 255, 236),
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 0, 63, 77),
-        elevation: 0.0,
-        title: Text('Register to KanTinir'),
-        actions: <Widget>[
-          TextButton.icon(
-              icon: Icon(Icons.person),
-              label: Text('Sign In'),
-              onPressed: () {
-                widget.toggleView();
-              })
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(  
-              children: <Widget>[
-                SizedBox(height: 20.0),
-                TextFormField(
-                  decoration: textInputDecoration.copyWith(
-                      hintText: 'Enter a valid email'),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      size: 40,
+                      color: Color(0xFF22A1BB),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 0),
+              const Text(
+                "Create your",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                "account",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'Enter your email',
+                    prefixIcon:
+                        const Icon(Icons.email, color: Color(0xFFB6B6B6)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
+                  ),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                   onChanged: (val) {
                     setState(() => email = val);
                   },
                 ),
-                SizedBox(height: 20.0),
-                TextFormField(
-                  decoration: textInputDecoration.copyWith(
-                      hintText: 'Username'),
-                  validator: (val) => val!.isEmpty ? 'Enter your Username' : null,
+              ),
+              SizedBox(height: 20.0),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    hintText: 'Enter your username',
+                    prefixIcon:
+                        const Icon(Icons.person, color: Color(0xFFB6B6B6)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
+                  ),
+                  validator: (val) =>
+                      val!.isEmpty ? 'Enter your username' : null,
                   onChanged: (val) {
                     setState(() => username = val);
                   },
                 ),
-                SizedBox(height: 20.0),
-                TextFormField(
-                  decoration: textInputDecoration.copyWith(
-                      hintText: 'Enter a valid password'),
+              ),
+              SizedBox(height: 20.0),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    hintText: 'Enter your password',
+                    prefixIcon:
+                        const Icon(Icons.lock, color: Color(0xFFB6B6B6)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
+                  ),
                   obscureText: true,
                   validator: (val) =>
                       val!.length < 6 ? 'Enter a password 6+ chars long' : null,
@@ -119,145 +183,147 @@ class _RegisterState extends State<Register> {
                     setState(() => password1 = val);
                   },
                 ),
-                SizedBox(height: 20.0),
-                    TextFormField(
-                      decoration: textInputDecoration.copyWith(
-                        hintText: 'Retype your password',
-                        fillColor: Color.fromARGB(255, 235, 235, 235),
-                      ),
-                      obscureText: true,
-                      validator: (val) =>
-                          val != password1 ? 'Passwords do not match' : null,
-                      onChanged: (val) {
-                        setState(() => confirmPassword = val);
-                      },
+              ),
+              SizedBox(height: 20.0),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    hintText: 'Confirm your password',
+                    prefixIcon:
+                        const Icon(Icons.lock, color: Color(0xFFB6B6B6)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                SizedBox(height: 20.0),
-          
-                    TextField(
-                      style: TextStyle(color: Colors.black),
-                      controller: dateInput,
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.calendar_today),
-                        labelText: "Enter Birthdate",
-                      ),
-                      readOnly: true,
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
-                          lastDate: DateTime(2100),
-                        );
-          
-                        if (pickedDate != null) {
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          setState(() {
-                            dateInput.text = formattedDate;
-                            bday = formattedDate;
-                          });
-                        }
-                      },
-                    ),
-          
-                    SizedBox(height: 12.0),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: DropdownButton(
-                        // Initial Value
-                        value: educationValue,
-          
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
-          
-                        // Set the style to change the text color
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 83, 98, 93), fontSize: 17),
-          
-                        // Array list of items
-                        items: educationLevels.map((String educationItem) {
-                          return DropdownMenuItem(
-                            value: educationItem,
-                            child: Text(educationItem),
-                          );
-                        }).toList(),
-          
-                        // After selecting the desired option, it will
-                        // change the button value to the selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            educationValue = newValue!;
-                          });
-                        },
-                      ),
-                    ),
-                
-                SizedBox(height: 12.0),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: DropdownButton(
-                        
-                        value: colorValue,
-          
-                        
-                        icon: const Icon(Icons.keyboard_arrow_down),
-          
-                        
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 83, 98, 93), fontSize: 17),
-          
-                        
-                        items: colorLevels.map((String coloritem) {
-                          return DropdownMenuItem(
-                            value: coloritem,
-                            child: Text(coloritem),
-                          );
-                        }).toList(),
-          
-                        // After selecting the desired option, it will
-                        // change the button value to the selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            colorValue = newValue!;
-                          });
-                        },
-                      ),
-                    ),
-          
-          
-          
-          
-          
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 0, 113, 62)),
-                  child: Text('Register',
-                      style: const TextStyle(color: Colors.white)),
-                  onPressed: () async { 
-                    if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.registerWithEmailAndPassword(     //Changed result to usercreds
-                          email, username ,confirmPassword, colorValue, bday, educationValue ,_handleRegisterError);
-                      
-                      if (result == null) {
-                        setState(() => error = _errorMessage!);
-                      }
+                  ),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
+                  ),
+                  obscureText: true,
+                  validator: (val) =>
+                      val != password1 ? 'Passwords do not match' : null,
+                  onChanged: (val) {
+                    setState(() => confirmPassword = val);
+                  },
+                ),
+              ),
+              SizedBox(height: 20.0),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: TextField(
+                  style: TextStyle(color: Colors.black),
+                  controller: dateInput,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.calendar_today),
+                    labelText: "Enter Birthdate",
+                  ),
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime(2100),
+                    );
+
+                    if (pickedDate != null) {
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                      setState(() {
+                        dateInput.text = formattedDate;
+                        bday = formattedDate;
+                      });
                     }
                   },
                 ),
-                SizedBox(height: 12.0),
-                Text(
-                  error,
-                  style: TextStyle(color: Colors.red, fontSize: 14.0),
+              ),
+              SizedBox(height: 12.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 80),
+                  child: DropdownButton(
+                    value: educationValue,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 83, 98, 93), fontSize: 17),
+                    items: educationLevels.map((String educationItem) {
+                      return DropdownMenuItem(
+                        value: educationItem,
+                        child: Text(educationItem),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        educationValue = newValue!;
+                      });
+                    },
+                  ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: 12.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 110),
+                  child: DropdownButton(
+                    value: colorValue,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 83, 98, 93), fontSize: 17),
+                    items: colorLevels.map((String coloritem) {
+                      return DropdownMenuItem(
+                        value: coloritem,
+                        child: Text(coloritem),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        colorValue = newValue!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 0, 113, 62)),
+                child: const Text('Register',
+                    style: TextStyle(color: Colors.white)),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    dynamic result = await _auth.registerWithEmailAndPassword(
+                        email,
+                        username,
+                        confirmPassword,
+                        colorValue,
+                        bday,
+                        educationValue,
+                        _handleRegisterError);
+
+                    if (result == null) {
+                      setState(() => error = _errorMessage!);
+                    }
+                  }
+                },
+              ),
+              SizedBox(height: 12.0),
+              Text(
+                error,
+                style: TextStyle(color: Colors.red, fontSize: 14.0),
+              ),
+              const SizedBox(height: 180),
+            ],
           ),
         ),
       ),
     );
   }
 }
-
-
