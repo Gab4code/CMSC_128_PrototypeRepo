@@ -30,9 +30,9 @@ class _FoodPageState extends State<FoodPage> {
           children: [
             Container(
               height: 500,
-              child: StreamBuilder(
-                stream: _kaon.snapshots(),
-                builder: (context, AsyncSnapshot snapshots) {
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _kaon.orderBy('averageRating', descending: true).snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
                   if (snapshots.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(color: Colors.green),
@@ -98,25 +98,25 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Stream<double> getAverageRatingStream(CollectionReference reviewsCollection, DocumentReference documentReference) {
-  return reviewsCollection.snapshots().map((snapshot) {
-    if (snapshot.docs.isEmpty) {
-      return 0.0;
-    }
+    return reviewsCollection.snapshots().map((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return 0.0;
+      }
 
-    double totalRating = 0;
-    for (var doc in snapshot.docs) {
-      final data = doc.data();
-      if (data != null && data is Map<String, dynamic> && data.containsKey('rating')) {
-        final rating = data['rating'];
-        if (rating is num) {
-          totalRating += rating.toDouble(); // Assuming rating is a numeric value
+      double totalRating = 0;
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        if (data != null && data is Map<String, dynamic> && data.containsKey('rating')) {
+          final rating = data['rating'];
+          if (rating is num) {
+            totalRating += rating.toDouble(); // Assuming rating is a numeric value
+          }
         }
       }
-    }
 
-    final averageRating = totalRating / snapshot.docs.length;
-    documentReference.update({'averageRating': averageRating}); // Update Firestore with the average rating
-    return averageRating;
-  });
-}
+      final averageRating = totalRating / snapshot.docs.length;
+      documentReference.update({'averageRating': averageRating}); // Update Firestore with the average rating
+      return averageRating;
+    });
+  }
 }

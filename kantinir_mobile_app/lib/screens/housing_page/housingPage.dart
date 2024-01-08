@@ -20,7 +20,7 @@ class HousingPage extends StatefulWidget {
 }
 
 class _housingPageState extends State<HousingPage> {
-  final CollectionReference _kaon = FirebaseFirestore.instance.collection("tinir");
+  final CollectionReference _tinir = FirebaseFirestore.instance.collection("tinir");
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,9 @@ class _housingPageState extends State<HousingPage> {
           children: [
             Container(
               height: 500,
-              child: StreamBuilder(
-                stream: _kaon.snapshots(),
-                builder: (context, AsyncSnapshot snapshots) {
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _tinir.orderBy('averageRating', descending: true).snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
                   if (snapshots.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(color: Colors.green),
