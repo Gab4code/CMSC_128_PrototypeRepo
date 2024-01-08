@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:kantinir_mobile_app/services/my_list_tile.dart';
+import 'package:rxdart/rxdart.dart';
 import '../food_page/foodPage.dart';
 import '../housing_page/housingPage.dart';
-import 'package:rxdart/rxdart.dart';
 
 class Home_contentPage extends StatefulWidget {
   const Home_contentPage({Key? key}) : super(key: key);
@@ -130,6 +131,8 @@ class _Home_contentPageState extends State<Home_contentPage> {
 
 class FoodPageList extends StatelessWidget {
   final CollectionReference _kaon = FirebaseFirestore.instance.collection("kaon");
+  final CollectionReference _tinir = FirebaseFirestore.instance.collection("tinir");
+  
 
   @override Widget build(BuildContext context) {
     return Scaffold(
@@ -138,19 +141,23 @@ class FoodPageList extends StatelessWidget {
           children: [
             Container(
               height: 400,
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _kaon.orderBy('averageRating', descending: true).snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
+              child: StreamBuilder<List<QueryDocumentSnapshot>>(
+                stream: _mergeAndSortCollectionStreams(),
+                builder: (context, AsyncSnapshot<List<QueryDocumentSnapshot>> snapshots) {
                   if (snapshots.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(color: Colors.green),
                     );
                   }
                   if (snapshots.hasData) {
+
+                    List<QueryDocumentSnapshot> combinedData = snapshots.data!;
+
+                    
                     return ListView.builder(
-                      itemCount: snapshots.data!.docs.length,
+                      itemCount: combinedData.length,
                       itemBuilder: (context, index) {
-                        final DocumentSnapshot records = snapshots.data!.docs[index];
+                        final DocumentSnapshot records = combinedData[index];
                         final reviewsCollection = records.reference.collection('reviews');
 
                         return StreamBuilder<double>(
@@ -204,6 +211,24 @@ class FoodPageList extends StatelessWidget {
       ),
     );
   }
+
+    Stream<List<QueryDocumentSnapshot>> _mergeAndSortCollectionStreams() {
+    return CombineLatestStream.combine2(
+    _kaon.orderBy('averageRating', descending: true).snapshots(),
+    _tinir.orderBy('averageRating', descending: true).snapshots(),
+    (QuerySnapshot kaonSnap, QuerySnapshot tinirSnap) {
+      final List<QueryDocumentSnapshot> kaonDocs = kaonSnap.docs;
+      final List<QueryDocumentSnapshot> tinirDocs = tinirSnap.docs;
+
+      // Combine and sort the snapshots from both collections
+      List<QueryDocumentSnapshot> combinedSorted = [...kaonDocs, ...tinirDocs];
+      combinedSorted.sort((a, b) => b['averageRating'].compareTo(a['averageRating']));
+
+      return combinedSorted;
+    },
+  );
+}
+
 
   Stream<double> getAverageRatingStream(CollectionReference reviewsCollection, DocumentReference documentReference) {
     return reviewsCollection.snapshots().map((snapshot) {
