@@ -229,6 +229,15 @@ class FoodPageList extends StatelessWidget {
                                         startActionPane: ActionPane(motion: StretchMotion(), children: []),
                                         child: Container(
                                           decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage('images/${records["name"]}.jpg'),
+                                              fit: BoxFit.cover,
+                                              colorFilter: ColorFilter.mode(
+                                                Colors.white.withOpacity(0.8),
+                                                BlendMode.srcOver,
+                                              ),
+                                            ),
+                                            
                                             border: Border.all(
                                               color: Colors.grey,
                                               width: 1.0,
@@ -237,7 +246,7 @@ class FoodPageList extends StatelessWidget {
                                           ),
                                           child: ListTile(
                                             title: Text(records["name"]),
-                                            subtitle: Text(records["owner"] + '\n' + (records["fb link"]) + '\n' + (records["location"])),
+                                            //subtitle: Text(records["owner"] + '\n' + (records["fb link"]) + '\n' + (records["location"])),
                                             trailing: Text('Average Rating: ${averageRating.toStringAsFixed(1)}'),
                                           ),
                                         ),
