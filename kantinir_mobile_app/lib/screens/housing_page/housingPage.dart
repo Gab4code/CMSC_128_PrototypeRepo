@@ -475,7 +475,7 @@ class _housingPageState extends State<HousingPage> {
                                       ),
                                       child: ListTile(
                                         title: Text(
-                                          "₱₱₱"+records["min_spend"].toString()+"\n\n\n" + records["name"],
+                                          "₱"+records["min_spend"].toString()+"\n\n\n" + records["name"],
                                           style: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.0,

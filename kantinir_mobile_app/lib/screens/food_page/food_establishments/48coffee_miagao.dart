@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class coffee48MiagaoPage extends StatelessWidget {
   coffee48MiagaoPage({super.key});
@@ -77,10 +78,36 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             SizedBox(height: 20), // Add spacing between paragraph and "Menu" header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              //child: Text(
-                //'Menu',
-                //style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              //),
+              child: Column(
+                children: [
+                  Text(
+                    'Menu:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                 GestureDetector(
+                    onTap: () async {
+                      // Replace 'YOUR_LINK_HERE' with the actual URL you want to redirect to
+                      String url = 'https://www.facebook.com/EsplanadeStreetCoffee';
+                      // Use launch from the url_launcher package to open the link
+                      if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        "images/coffee.jpg",
+                        // You can set other properties for the image as needed
+                        // For example: width, height, fit, etc.
+                      ),
+                    ),
+                  ),
+                  Text(' MOP: COD, GCASH \n Contact No: 09958191149 \n Location: Sitio Igtucong, Malagyan, Miagao \n '),
+                  Text('https://www.facebook.com/elgarajemiagao \n', style: TextStyle(color: Colors.blue),),
+                ],
+              ),
             ),
             // Add menu items or further widgets below as needed
 

@@ -77,10 +77,22 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             SizedBox(height: 20), // Add spacing between paragraph and "Menu" header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              // child: Text(
-              //   'Features',
-              //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              // ),
+              child: Column(
+                children: [
+                  Text(
+                    'Information:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Name: Balay Gumamela \n Owner: Mary Ann Morano \n Contact no: 09778323266 \n Location: Bacauan, Miagao, Iloilo"
+                    ),
+                  ),
+                ],
+              ),
+              
+              
             ),
             // Add menu items or further widgets below as needed
 
