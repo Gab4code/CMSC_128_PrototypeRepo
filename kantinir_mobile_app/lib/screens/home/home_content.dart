@@ -22,13 +22,23 @@ class Home_contentPage extends StatefulWidget {
 }
 
 class _Home_contentPageState extends State<Home_contentPage> {
+  final CollectionReference _kaon = FirebaseFirestore.instance.collection("kaon");
+  final CollectionReference _tinir = FirebaseFirestore.instance.collection("tinir");
+
+  CollectionReference currentCollection = FirebaseFirestore.instance.collection("kaon");
+
   final currentUser = FirebaseAuth.instance.currentUser!;
   bool _showImage = false;
   Widget currentPage = Container();
   int currentIndex = 0;
 
   
-  
+  void updateCollection(bool isKaon) {
+    setState(() {
+      currentCollection = isKaon ? _kaon : _tinir;
+    });
+  }
+
 
 
   @override
@@ -91,131 +101,174 @@ class _Home_contentPageState extends State<Home_contentPage> {
               child: Text(
                 "What are you looking for?",
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
               ),
             ),
           ),
-          Row(
+          Expanded(
+            child: Row(
+              //child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
-                icon: Icon(Icons.restaurant, size: 70,),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => FoodPage()),
-                  );
-                },
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                   updateCollection(true);
+                  },
+                  child: Image.asset(
+                    'images/food_lua.jpg', // Replace this with your image path
+                    //width: 50,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
-              IconButton(
-                icon: Icon(Icons.house, size: 70),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HousingPage()),
-                  );
-                },
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    updateCollection(false);
+                  },
+                  child: Image.asset(
+                    'images/Housing_lua.jpg', // Replace this with your image path
+                    //width: 50,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
             ],
+              //),
+                  ),
           ),
-          Flexible(
-            child: FoodPageList(),     
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('RECOMMENDATIONS',
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold
+            ),),
+          ),
+          Expanded(
+            flex:  2,
+            child: FoodPageList(
+              kaonCollection: _kaon,
+              tinirCollection: _tinir,
+              collectionReference: currentCollection),     
           ),
         ],
+
       ),
     );
   }
 }
 
+
+
+
 class FoodPageList extends StatelessWidget {
-  final CollectionReference _kaon = FirebaseFirestore.instance.collection("kaon");
-  final CollectionReference _tinir = FirebaseFirestore.instance.collection("tinir");
-  
+  // final CollectionReference _kaon = FirebaseFirestore.instance.collection("kaon");
+  // final CollectionReference _tinir = FirebaseFirestore.instance.collection("tinir");
+  final CollectionReference collectionReference;
+  final CollectionReference kaonCollection;
+  final CollectionReference tinirCollection;
+
+  const FoodPageList({Key? key, required this.collectionReference, required this.kaonCollection, required this.tinirCollection}) : super(key: key);
 
   @override Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: 400,
-              child: StreamBuilder<List<QueryDocumentSnapshot>>(
-                stream: _mergeAndSortCollectionStreams(),
-                builder: (context, AsyncSnapshot<List<QueryDocumentSnapshot>> snapshots) {
-                  if (snapshots.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(color: Colors.green),
-                    );
-                  }
-                  if (snapshots.hasData) {
-
-                    List<QueryDocumentSnapshot> combinedData = snapshots.data!;
-
-                    
-                    return ListView.builder(
-                      itemCount: combinedData.length,
-                      itemBuilder: (context, index) {
-                        final DocumentSnapshot records = combinedData[index];
-                        final reviewsCollection = records.reference.collection('reviews');
-
-                        return StreamBuilder<double>(
-                          stream: getAverageRatingStream(reviewsCollection, records.reference),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            }
-                            if (snapshot.hasData) {
-                              final averageRating = snapshot.data!;
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, records["name"]);
-                                  },
-                                  child: Slidable(
-                                    startActionPane: ActionPane(motion: StretchMotion(), children: []),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width: 1.0,
+            Expanded(
+              
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 350,
+                  child: StreamBuilder<List<QueryDocumentSnapshot>>(
+                    stream: _mergeAndSortCollectionStreams(),
+                    builder: (context, AsyncSnapshot<List<QueryDocumentSnapshot>> snapshots) {
+                      if (snapshots.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(color: Colors.green),
+                        );
+                      }
+                      if (snapshots.hasData) {
+                          
+                        List<QueryDocumentSnapshot> combinedData = snapshots.data!;
+                        
+                        List<QueryDocumentSnapshot> filteredData = combinedData.where((doc) {
+                          return doc.reference.parent == collectionReference;
+                        }).toList();
+                        
+                        return ListView.builder(
+                          itemCount: filteredData.length,
+                          itemBuilder: (context, index) {
+                            final DocumentSnapshot records = filteredData[index];
+                            final reviewsCollection = records.reference.collection('reviews');
+                          
+                            return StreamBuilder<double>(
+                              stream: getAverageRatingStream(reviewsCollection, records.reference),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
+                                if (snapshot.hasData) {
+                                  final averageRating = snapshot.data!;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(context, records["name"]);
+                                      },
+                                      child: Slidable(
+                                        startActionPane: ActionPane(motion: StretchMotion(), children: []),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius: BorderRadius.circular(8.0),
+                                          ),
+                                          child: ListTile(
+                                            title: Text(records["name"]),
+                                            subtitle: Text(records["owner"] + '\n' + (records["fb link"]) + '\n' + (records["location"])),
+                                            trailing: Text('Average Rating: ${averageRating.toStringAsFixed(1)}'),
+                                          ),
                                         ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      ),
-                                      child: ListTile(
-                                        title: Text(records["name"]),
-                                        subtitle: Text(records["owner"] + '\n' + (records["fb link"]) + '\n' + (records["location"])),
-                                        trailing: Text('Average Rating: ${averageRating.toStringAsFixed(1)}'),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            }
-                            return Container(); // Placeholder while waiting for rating
+                                  );
+                                }
+                                return Container(); // Placeholder while waiting for rating
+                              },
+                            );
                           },
                         );
-                      },
-                    );
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(color: Colors.red),
-                  );
-                },
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(color: Colors.red),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
           ],
         ),
-      ),
-    );
+      );
+  
   }
 
     Stream<List<QueryDocumentSnapshot>> _mergeAndSortCollectionStreams() {
     return CombineLatestStream.combine2(
-    _kaon.orderBy('averageRating', descending: true).snapshots(),
-    _tinir.orderBy('averageRating', descending: true).snapshots(),
+    kaonCollection.orderBy('averageRating', descending: true).snapshots(),
+    tinirCollection.orderBy('averageRating', descending: true).snapshots(),
     (QuerySnapshot kaonSnap, QuerySnapshot tinirSnap) {
       final List<QueryDocumentSnapshot> kaonDocs = kaonSnap.docs;
       final List<QueryDocumentSnapshot> tinirDocs = tinirSnap.docs;
