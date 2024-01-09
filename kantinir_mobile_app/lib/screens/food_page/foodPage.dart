@@ -416,7 +416,7 @@ class _FoodPageState extends State<FoodPage> {
                                         ),
                                         child: ListTile(
                                           title: Text(
-                                            "\n\n\n\n" + records["name"],
+                                            "₱₱₱"+records["min_spend"].toString()+ "\n\n\n" + records["name"],
                                             style: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 16.0,

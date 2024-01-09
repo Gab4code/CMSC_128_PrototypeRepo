@@ -416,7 +416,7 @@ class _housingPageState extends State<HousingPage> {
               ),
             ),
             Container(
-              height: 380,
+              height: 348,
               child: StreamBuilder<QuerySnapshot>(
                 stream: createQuery(_tinir).snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
@@ -475,7 +475,7 @@ class _housingPageState extends State<HousingPage> {
                                       ),
                                       child: ListTile(
                                         title: Text(
-                                          "\n\n\n\n" + records["name"],
+                                          "₱₱₱"+records["min_spend"].toString()+"\n\n\n" + records["name"],
                                           style: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.0,
