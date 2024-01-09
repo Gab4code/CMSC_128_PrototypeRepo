@@ -145,6 +145,7 @@ class _profilePageState extends State<profilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 0, 63, 77),
         title: Text("User Profile"),
       ),
       body: StreamBuilder<DocumentSnapshot>(
