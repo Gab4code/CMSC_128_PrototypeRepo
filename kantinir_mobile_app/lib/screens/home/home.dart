@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 200, 255, 236),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('KanTinir'),
         backgroundColor: Color.fromARGB(255, 0, 63, 77),
         elevation: 0.0,

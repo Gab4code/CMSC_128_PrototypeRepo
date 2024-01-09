@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:kantinir_mobile_app/services/my_list_tile.dart';
@@ -16,6 +20,7 @@ class profilePage extends StatefulWidget {
 
 class _profilePageState extends State<profilePage> {
   final currentUser = FirebaseAuth.instance.currentUser!;
+  String imageUrl = '';
   final AuthService _auth = AuthService();
   String educationValue = 'Choose education level';
   var educationLevels = [
@@ -97,12 +102,50 @@ class _profilePageState extends State<profilePage> {
   }
 
 
+  File? _pickedImage;
+
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
+
+
+      //String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      //Step 2: upload to Firebase storage
+      
+
+      Reference referenceRoot = FirebaseStorage.instance.ref();
+      Reference referenceDirImages = referenceRoot.child('images');
+    
+
+      Reference referenceImageToUpload = referenceDirImages.child('${currentUser.uid}.jpg');
+
+      try{
+
+      await referenceImageToUpload.putFile(File(file!.path));
+
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+
+      await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(currentUser.email)
+        .update({'profileImageURL': imageUrl});
+    
+      } catch(error) {
+        //Some error occured
+      }
+
+
+    }
+  
+  
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 0, 63, 77),
         title: Text("User Profile"),
       ),
       body: StreamBuilder<DocumentSnapshot>(
@@ -120,10 +163,24 @@ class _profilePageState extends State<profilePage> {
         children: [
           Column(
             children: [
-              Center(
-                child: Icon(
-                  Icons.person,
-                  size: 200,
+              GestureDetector(
+                onTap: () {
+                  _pickImage();
+                },
+                child: Center(
+                  child: userData['profileImageURL'] != null 
+                  ? ClipOval(
+                    child: Image.network(
+                    userData['profileImageURL'],
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  )
+                  )
+                  : Icon(
+                    Icons.person,
+                    size: 200,
+                  ),
                 ),
               ),
              MyListTile(
