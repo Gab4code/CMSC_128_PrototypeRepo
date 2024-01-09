@@ -60,7 +60,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                 ),
                 borderRadius: BorderRadius.circular(10.0),
                 image: DecorationImage(
-                  image: AssetImage('assets/your_image.jpg'),
+                  image: AssetImage('images/48 Coffee.Co Miagao.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -69,7 +69,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'This is a paragraph describing 48 Coffee.Co Miagao. Add your text here.',
+                '48 Coffe.Co is a cheap and affordable coffee for everyone, with a lot of coffee selection to choose from.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(fontSize: 16),
               ),
@@ -77,10 +77,10 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             SizedBox(height: 20), // Add spacing between paragraph and "Menu" header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Menu',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+              //child: Text(
+                //'Menu',
+                //style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              //),
             ),
             // Add menu items or further widgets below as needed
 

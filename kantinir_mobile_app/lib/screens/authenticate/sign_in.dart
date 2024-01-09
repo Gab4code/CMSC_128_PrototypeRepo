@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kantinir_mobile_app/screens/authenticate/forgotPasswordPage.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/shared/constants.dart';
@@ -94,6 +95,37 @@ class _SignInPageState extends State<SignInPage> {
                     onChanged: (val) {
                       setState(() => password = val);
                     },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return forgotPasswordPage();
+                              },
+                            ),
+                          );
+                        },
+                        child: RichText(
+                          text: const TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Forgot password',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
