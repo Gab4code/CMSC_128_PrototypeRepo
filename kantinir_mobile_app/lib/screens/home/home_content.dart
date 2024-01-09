@@ -53,7 +53,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Welcome!"),
+            title: Text("SUCCESS!!"),
             content: StreamBuilder<DocumentSnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("Users")
