@@ -133,7 +133,7 @@ class _RegisterState extends State<forgotPasswordPage> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       await _auth.resetPassword(email: email);
-                      // You can add logic here for showing a confirmation message
+                      // ill add stuff later here
                     }
                   },
                   child: Text('Send Reset Email'),
