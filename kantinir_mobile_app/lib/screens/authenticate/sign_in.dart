@@ -107,7 +107,7 @@ class _SignInPageState extends State<SignInPage> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return forgotPasswordPage();
+                                return forgotPasswordPage(toggleView: () {});
                               },
                             ),
                           );
