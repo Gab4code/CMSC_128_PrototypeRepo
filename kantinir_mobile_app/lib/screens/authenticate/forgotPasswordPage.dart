@@ -1,153 +1,111 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:kantinir_mobile_app/screens/authenticate/register.dart';
-import 'package:kantinir_mobile_app/services/auth.dart';
-import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
-import 'package:kantinir_mobile_app/shared/constants.dart';
-import 'package:kantinir_mobile_app/screens/authenticate/changePassword.dart';
 
 class forgotPasswordPage extends StatefulWidget {
-  final Function toggleView;
-  forgotPasswordPage({super.key, required this.toggleView});
+  const forgotPasswordPage({super.key});
 
   @override
-  State<forgotPasswordPage> createState() => _RegisterState();
+  State<forgotPasswordPage> createState() => _forgotPasswordPageState();
 }
 
-class _RegisterState extends State<forgotPasswordPage> {
-  final AuthService _auth = AuthService();
+class _forgotPasswordPageState extends State<forgotPasswordPage> {
+  final _emailController = TextEditingController();
 
-  // key to associate data
-  final _formKey = GlobalKey<FormState>();
-
-  String? _errorMessage;
-  void _handleRegisterError(String errorMessage) {
-    setState(() {
-      _errorMessage =
-          errorMessage.replaceAllMapped(RegExp(r'\[[^\]]*\]'), (match) {
-        return ''; // Replace the matched content with an empty string
-      });
-    });
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 
-  // text field state
-  String email = '';
-  String password = '';
-  String fcolor = '';
-  String password1 = '';
-  String confirmPassword = '';
-  String error = '';
-  String bday = '';
-  String username = '';
+  Future<void> checkEmailAndResetPassword() async {
+    String email = _emailController.text.trim();
 
-  TextEditingController dateInput =
-      TextEditingController(); // Initialize the controller
-
-  String selectedEducationLevel = '';
-  String educationValue = 'Choose education level';
-  var educationLevels = [
-    'Choose education level',
-    'Elementary',
-    'High School',
-    'Bachelor\'s Degree',
-    'Master\'s Degree',
-    'Ph.D.',
-  ];
-  String selectedColorLevel = '';
-  String colorValue = 'Choose a color';
-  var colorLevels = [
-    'Choose a color',
-    'red',
-    'orange',
-    'yellow',
-    'green',
-    'blue',
-  ];
+    try {
+      var methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      if (methods.isEmpty) {
+        // Email doesn't exist in Firebase
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: Text('No account found with this email.'),
+            );
+          },
+        );
+      } else {
+        // Email exists, send password reset email
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+        // Inform user that the password reset email has been sent
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text('Password reset email sent successfully.'),
+            );
+          },
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(e.message.toString()),
+            );
+          });
+      // Handle other exceptions if necessary
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        size: 40,
-                        color: Color(0xFF22A1BB),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 0),
-                const Text(
-                  "You can reset your password if you answer all of these correctly",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Enter your email',
-                      prefixIcon:
-                          const Icon(Icons.email, color: Color(0xFFB6B6B6)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.black,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w400,
-                    ),
-                    validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                    onChanged: (val) {
-                      print(email);
-                      setState(() => email = val);
-                    },
-                  ),
-                ),
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await _auth.resetPassword(email: email);
-                      // ill add stuff later here
-                    }
-                  },
-                  child: Text('Send Reset Email'),
-                ),
-                SizedBox(height: 12.0),
-                Text(
-                  error,
-                  style: TextStyle(color: Colors.red, fontSize: 14.0),
-                ),
-                const SizedBox(height: 180),
-              ],
+      appBar: AppBar(
+        backgroundColor: Color(0xFF11CDA7),
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Text(
+              'Enter Your Email and We will send you a password reset link',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'Poppins',
+              ),
             ),
           ),
-        ),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Email',
+                fillColor: Colors.grey[200],
+                filled: true,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          MaterialButton(
+            onPressed: checkEmailAndResetPassword,
+            child: Text('Reset Password'),
+            color: Color(0xFF11CDA7),
+          ),
+        ],
       ),
     );
   }

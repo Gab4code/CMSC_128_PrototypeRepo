@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/shared/constants.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -181,8 +183,9 @@ class _RegisterState extends State<Register> {
                       fontWeight: FontWeight.w400,
                     ),
                     obscureText: true,
-                    validator: (val) =>
-                        val!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                    validator: (val) => val!.length < 6
+                        ? 'Enter a password 6+ chars long'
+                        : null,
                     onChanged: (val) {
                       setState(() => password1 = val);
                     },
@@ -236,7 +239,7 @@ class _RegisterState extends State<Register> {
                         firstDate: DateTime(1950),
                         lastDate: DateTime(2100),
                       );
-      
+
                       if (pickedDate != null) {
                         String formattedDate =
                             DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -312,8 +315,8 @@ class _RegisterState extends State<Register> {
                           bday,
                           educationValue,
                           _handleRegisterError);
-                          Navigator.pop(context);
-      
+                      Navigator.pop(context);
+
                       if (result == null) {
                         setState(() => error = _errorMessage!);
                       }
