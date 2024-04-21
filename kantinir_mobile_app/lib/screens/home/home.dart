@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
             label: Text('profile'),
             onPressed: () {
               Navigator.pushNamed(context, "/profile");
-            }, 
+            },
           ),
           TextButton.icon(
             icon: Icon(Icons.logout),
@@ -53,7 +53,6 @@ class _HomePageState extends State<HomePage> {
               await _auth.signOut();
             },
           ),
-          
         ],
       ),
       // body: Center(
@@ -122,7 +121,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             label: 'Housing',
-            icon: Icon(Icons.inventory),
+            icon: Icon(Icons.food_bank_outlined),
           )
         ],
       ),
