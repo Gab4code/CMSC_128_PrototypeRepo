@@ -161,13 +161,13 @@ class _profilePageState extends State<profilePage> {
                               ? ClipOval(
                                   child: Image.network(
                                   userData['profileImageURL'],
-                                  width: 200,
-                                  height: 200,
+                                  width: 150,
+                                  height: 150,
                                   fit: BoxFit.cover,
                                 ))
                               : Icon(
                                   Icons.person,
-                                  size: 200,
+                                  size: 150,
                                 ),
                         ),
                       ),
@@ -316,7 +316,7 @@ class _profilePageState extends State<profilePage> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 50.0),
+                    padding: const EdgeInsets.only(bottom: 26.0),
                     child: Container(
                       color: Colors.grey,
                       child: MyListTile(

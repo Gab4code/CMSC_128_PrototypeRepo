@@ -45,7 +45,7 @@ class _housingPageState extends State<HousingPage> {
               children: [
                 SizedBox(height: 25),
                 Text(
-                  'Select Minimum Budget Value for one meal: Php $_slider_minimum_budget',
+                  'Budget: Php $_slider_minimum_budget',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14.0,
@@ -529,6 +529,11 @@ class _housingPageState extends State<HousingPage> {
 
     if (fliterIsSwitched == true) {
       query = query.where('housing_tags', arrayContainsAny: array_tag_housing);
+    }
+
+    if (fliterIsSwitched == true) {
+      query =
+          query.where('min_spend', isLessThanOrEqualTo: _slider_minimum_budget);
     }
 
     return query;

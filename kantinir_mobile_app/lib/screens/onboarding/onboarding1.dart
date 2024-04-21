@@ -16,9 +16,13 @@ class Onboarding1 extends StatelessWidget {
           );
         },
         child: Center(
-          child: Image.asset(
-            'images/onboarding1.png', // Replace 'your_image_path_here' with the actual path to your image asset
-            // Set the height as per your requirement
+          child: InteractiveViewer(
+            boundaryMargin: EdgeInsets.all(double.infinity),
+            minScale: 0.1,
+            maxScale: 5.0,
+            child: Image.asset(
+              'images/onboarding1.png', 
+            ),
           ),
         ),
       ),
