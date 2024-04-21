@@ -39,7 +39,10 @@ class Onboarding2 extends StatelessWidget {
               ),
               child: const Text(
                 "Let's Get You Started!",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
           ],
