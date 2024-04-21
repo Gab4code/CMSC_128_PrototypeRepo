@@ -4,7 +4,7 @@ import 'package:kantinir_mobile_app/screens/authenticate/sign_in.dart';
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee_miagao.dart';
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/aj_foodhub.dart';
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/el_garaje.dart';
-import 'package:kantinir_mobile_app/screens/food_page/food_establishments/kubo_resto.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/kubo_resto/kubo_resto.dart';
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse_&_coffee.dart';
 import 'package:kantinir_mobile_app/screens/home/profile_page.dart';
 import 'package:kantinir_mobile_app/screens/housing_page/housingPage.dart';
