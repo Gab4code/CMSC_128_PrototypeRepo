@@ -37,6 +37,22 @@ class _profilePageState extends State<profilePage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController dateInput = TextEditingController();
+  Future<void> _changePassword(
+      String currentPassword, String newPassword) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final cred = EmailAuthProvider.credential(
+        email: user!.email!, password: currentPassword);
+
+    try {
+      await user.reauthenticateWithCredential(cred);
+      await user.updatePassword(newPassword);
+      print('Password updated successfully!');
+    } catch (error) {
+      print('Error updating password: $error');
+      // Handle error here
+    }
+  }
+
   @override
   void dispose() {
     // Dispose the controller when the state is disposed
@@ -161,13 +177,13 @@ class _profilePageState extends State<profilePage> {
                               ? ClipOval(
                                   child: Image.network(
                                   userData['profileImageURL'],
-                                  width: 150,
-                                  height: 150,
+                                  width: 200,
+                                  height: 200,
                                   fit: BoxFit.cover,
                                 ))
                               : Icon(
                                   Icons.person,
-                                  size: 150,
+                                  size: 200,
                                 ),
                         ),
                       ),
@@ -310,13 +326,82 @@ class _profilePageState extends State<profilePage> {
                         icon: Icons.admin_panel_settings,
                         text: 'Change Password',
                         onTap: () {
-                          //Password tap functionality (edit user)
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Change Password'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      controller: passwordController,
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                          labelText: 'Current Password'),
+                                    ),
+                                    TextField(
+                                      controller: emailController,
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                          labelText: 'New Password'),
+                                    ),
+                                  ],
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Update'),
+                                    onPressed: () async {
+                                      String currentPassword =
+                                          passwordController.text.trim();
+                                      String newPassword =
+                                          emailController.text.trim();
+
+                                      await _changePassword(
+                                          currentPassword, newPassword);
+
+                                      // Clear the text fields after updating password
+                                      passwordController.clear();
+                                      emailController.clear();
+
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Success'),
+                                            content: Text(
+                                                'Password changed successfully!'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 26.0),
+                    padding: const EdgeInsets.only(bottom: 50.0),
                     child: Container(
                       color: Colors.grey,
                       child: MyListTile(
