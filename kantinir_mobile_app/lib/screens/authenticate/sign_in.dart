@@ -88,7 +88,7 @@ class _SignInPageState extends State<SignInPage> {
                         fontWeight: FontWeight.w400,
                       ),
                       validator: (val) =>
-                          val!.isEmpty ? 'Enter an email' : null,
+                          val!.isEmpty ? 'Enter an email' : 'Incorrect Email',
                       onChanged: (val) {
                         setState(() => email = val);
                       },
@@ -121,7 +121,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       validator: (val) => val!.length < 6
                           ? 'Enter a password 6+ chars long'
-                          : null,
+                          : 'Incorrect Password',
                       onChanged: (val) {
                         setState(() => password = val);
                       },

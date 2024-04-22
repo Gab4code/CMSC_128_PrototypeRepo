@@ -151,8 +151,9 @@ class _profilePageState extends State<profilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: BackButton(color: Colors.white),
           backgroundColor: Color.fromARGB(255, 0, 63, 77),
-          title: Text("User Profile"),
+          title: Text("User Profile", style: TextStyle(color: Colors.white)),
         ),
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance

@@ -6,38 +6,41 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class kuboRestoReviewPage extends StatelessWidget {
   kuboRestoReviewPage({super.key});
-final currentUser = FirebaseAuth.instance.currentUser!;
+  final currentUser = FirebaseAuth.instance.currentUser!;
   final TextEditingController commentController = TextEditingController();
   double rating = 0;
 
   Future<String?> getUsernameFromEmail(String email) async {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
         .collection('Users')
         .doc(currentUser.email)
         .get();
 
-      if (snapshot.exists) {
-        return snapshot['username'];
-      } else {
-        return null;
-      }
+    if (snapshot.exists) {
+      return snapshot['username'];
+    } else {
+      return null;
     }
+  }
 
   Future<void> submitReview(BuildContext context) async {
     String? userEmail = currentUser.email;
     String? username = await getUsernameFromEmail(userEmail!);
-    
-
 
     Map<String, dynamic> reviewData = {
-      'userId' : username,
-      'rating' : rating,
-      'comment' : commentController.text,
+      'userId': username,
+      'rating': rating,
+      'comment': commentController.text,
     };
 
     // Store the review in Firebase
-    FirebaseFirestore.instance.collection('kaon').doc('2').collection("reviews").add(reviewData);
-    
+    FirebaseFirestore.instance
+        .collection('kaon')
+        .doc('2')
+        .collection("reviews")
+        .add(reviewData);
+
     Navigator.of(context).pop();
   }
 
@@ -48,7 +51,8 @@ final currentUser = FirebaseAuth.instance.currentUser!;
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 20), // Add spacing between menu and "Review" header
+            SizedBox(
+                height: 20), // Add spacing between menu and "Review" header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
@@ -56,7 +60,9 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: 10), // Add spacing between "Review" header and review section
+            SizedBox(
+                height:
+                    10), // Add spacing between "Review" header and review section
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -66,7 +72,9 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                     'Been here?',
                     style: TextStyle(fontSize: 16),
                   ),
-                  SizedBox(height: 5), // Add spacing between "Been here?" and "Leave a review"
+                  SizedBox(
+                      height:
+                          5), // Add spacing between "Been here?" and "Leave a review"
                   GestureDetector(
                     onTap: () {
                       // Add code to show a review dialogue
@@ -74,7 +82,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Leave a review'),
+                            title: Center(child: Text('Leave a review')),
                             content: SingleChildScrollView(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -86,11 +94,10 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                     allowHalfRating: true,
                                     itemCount: 5,
                                     itemSize: 30,
-                                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: Colors.amber
-                                    ),
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemBuilder: (context, _) =>
+                                        Icon(Icons.star, color: Colors.amber),
                                     onRatingUpdate: (value) {
                                       rating = value;
                                     },
@@ -100,7 +107,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                     decoration: InputDecoration(
                                       hintText: 'Write your review here',
                                     ),
-                                    maxLines: 3,
+                                    maxLines: 1,
                                   ),
                                 ],
                               ),
@@ -147,9 +154,11 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                 if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                   String? userEmail = currentUser.email;
                   return FutureBuilder<String?>(
-                    future: getUsernameFromEmail(userEmail!), // Assuming `currentUser` is defined somewhere
+                    future: getUsernameFromEmail(
+                        userEmail!), // Assuming `currentUser` is defined somewhere
                     builder: (context, usernameSnapshot) {
-                      if (usernameSnapshot.connectionState == ConnectionState.waiting) {
+                      if (usernameSnapshot.connectionState ==
+                          ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       }
 
@@ -158,13 +167,15 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                       return Column(
                         children: snapshot.data!.docs.map((document) {
                           var data = document.data() as Map<String, dynamic>;
-                          double rating = data['rating'].toDouble(); // Convert rating to double
+                          double rating = data['rating']
+                              .toDouble(); // Convert rating to double
                           String userId = data['userId'];
 
                           bool isCurrentUser = currentUsername == userId;
 
                           return Container(
-                            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 20.0),
                             padding: EdgeInsets.all(12.0),
                             decoration: BoxDecoration(
                               border: Border.all(
@@ -178,7 +189,8 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                 ListTile(
                                   title: Text('Username: $userId'),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -190,7 +202,8 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                             allowHalfRating: true,
                                             itemCount: 5,
                                             itemSize: 20,
-                                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                                            itemPadding: EdgeInsets.symmetric(
+                                                horizontal: 1.0),
                                             itemBuilder: (context, _) => Icon(
                                               Icons.star,
                                               color: Colors.amber,
@@ -215,24 +228,29 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
                                                   title: Text('Confirmation'),
-                                                  content: Text('Are you sure you want to remove this comment?'),
+                                                  content: Text(
+                                                      'Are you sure you want to remove this comment?'),
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                       child: Text('Cancel'),
                                                     ),
                                                     TextButton(
                                                       onPressed: () {
-                                                        FirebaseFirestore.instance
+                                                        FirebaseFirestore
+                                                            .instance
                                                             .collection('kaon')
                                                             .doc('2')
-                                                            .collection('reviews')
+                                                            .collection(
+                                                                'reviews')
                                                             .doc(document.id)
                                                             .delete();
 
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                       child: Text('Remove'),
                                                     ),
@@ -253,16 +271,16 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                   );
                 }
 
-                return Center(child: Text(
+                return Center(
+                    child: Text(
                   'No reviews yet.',
                   style: TextStyle(
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.center,
-                  ));
+                ));
               },
             ),
-
           ],
         ),
       ),

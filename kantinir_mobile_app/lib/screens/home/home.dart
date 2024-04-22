@@ -35,25 +35,24 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color.fromARGB(255, 200, 255, 236),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('KanTinir'),
+        title: Text('KanTinir', style: TextStyle(color: Colors.white)),
         backgroundColor: Color.fromARGB(255, 0, 63, 77),
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('profile'),
+            icon: Icon(Icons.person, color: Colors.white),
+            label: Text('profile', style: TextStyle(color: Colors.white)),
             onPressed: () {
               Navigator.pushNamed(context, "/profile");
-            }, 
+            },
           ),
           TextButton.icon(
-            icon: Icon(Icons.logout),
-            label: Text('logout'),
+            icon: Icon(Icons.logout, color: Colors.white),
+            label: Text('logout', style: TextStyle(color: Colors.white)),
             onPressed: () async {
               await _auth.signOut();
             },
           ),
-          
         ],
       ),
       // body: Center(
@@ -115,7 +114,7 @@ class _HomePageState extends State<HomePage> {
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: const [
-          BottomNavigationBarItem(label: "Food", icon: Icon(Icons.sensors)),
+          BottomNavigationBarItem(label: "Food", icon: Icon(Icons.food_bank)),
           BottomNavigationBarItem(
             label: "Home",
             icon: Icon(Icons.home),
