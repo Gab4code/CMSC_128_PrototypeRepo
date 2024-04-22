@@ -145,7 +145,7 @@ class _SignInPageState extends State<SignInPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF11CDA7),
+                      backgroundColor: Color(0xFF11CDA7),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),

@@ -109,12 +109,12 @@ class _kuboRestoMenuPageState extends State<kuboRestoMenuPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(item.name,
-                                  style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style:TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(height: 4,),
+                                  SizedBox(height: 1,),
                                   Text(
                                     'Price: ₱${item.price}',
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(fontSize: 10),
                                   ),
                                   //Room for more
                                 ],
