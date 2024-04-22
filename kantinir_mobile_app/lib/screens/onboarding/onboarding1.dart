@@ -16,12 +16,13 @@ class Onboarding1 extends StatelessWidget {
           );
         },
         child: Center(
-          child: InteractiveViewer(
-            boundaryMargin: EdgeInsets.all(double.infinity),
-            minScale: 0.1,
-            maxScale: 5.0,
-            child: Image.asset(
-              'images/onboarding1.png', 
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/onboarding1.png'),
+                fit: BoxFit
+                    .cover, // Stretch the image to cover the entire container
+              ),
             ),
           ),
         ),
