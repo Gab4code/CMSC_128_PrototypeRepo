@@ -115,7 +115,8 @@ class _HomePageState extends State<HomePage> {
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: const [
-          BottomNavigationBarItem(label: "Food", icon: Icon(Icons.sensors)),
+          BottomNavigationBarItem(
+              label: "Food", icon: Icon(Icons.food_bank_outlined)),
           BottomNavigationBarItem(
             label: "Home",
             icon: Icon(Icons.home),
