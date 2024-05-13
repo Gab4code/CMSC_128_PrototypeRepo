@@ -19,10 +19,9 @@ class _SignInPageState extends State<SignInPage> {
   // key to associate data
   final _formKey = GlobalKey<FormState>();
 
-  // text field controllers
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+  // text field state
+  String email = '';
+  String password = '';
   // error state
   String error = '';
 
@@ -41,8 +40,6 @@ class _SignInPageState extends State<SignInPage> {
   void dispose() {
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -75,7 +72,6 @@ class _SignInPageState extends State<SignInPage> {
                         horizontal: 16, vertical: 10),
                     child: TextFormField(
                       focusNode: _emailFocusNode,
-                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter your email',
@@ -92,7 +88,10 @@ class _SignInPageState extends State<SignInPage> {
                         fontWeight: FontWeight.w400,
                       ),
                       validator: (val) =>
-                          val!.isEmpty ? 'Enter an email' : 'Incorrect Email',
+                          val!.isEmpty ? 'Enter an email' : null,
+                      onChanged: (val) {
+                        setState(() => email = val);
+                      },
                       onFieldSubmitted: (_) {
                         // Move focus to password field when pressing "next" on keyboard
                         FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -104,7 +103,6 @@ class _SignInPageState extends State<SignInPage> {
                         horizontal: 16, vertical: 10),
                     child: TextFormField(
                       focusNode: _passwordFocusNode,
-                      controller: _passwordController,
                       obscureText: true,
                       // Set keyboard type for password
                       decoration: InputDecoration(
@@ -123,7 +121,10 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       validator: (val) => val!.length < 6
                           ? 'Enter a password 6+ chars long'
-                          : 'Incorrect Password',
+                          : null,
+                      onChanged: (val) {
+                        setState(() => password = val);
+                      },
                       onFieldSubmitted: (_) {
                         // Submit form when pressing "done" on keyboard
                         _submitForm();
@@ -222,9 +223,6 @@ class _SignInPageState extends State<SignInPage> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      String email = _emailController.text;
-      String password = _passwordController.text;
-
       dynamic result = await _auth.signInWithEmailAndPassword(
         email,
         password,
