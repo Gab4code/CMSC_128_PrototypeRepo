@@ -86,6 +86,10 @@ flutter:
   assets:
     - images/
     - images/kubo_resto_items/
+    - images/48coffee_items/
+    - images/aj_foodhub_items/
+    - images/el_garaje_items/
+    - images/mrj_items/
   
   
   # An image asset can refer to one or more resolution-specific "variants", see

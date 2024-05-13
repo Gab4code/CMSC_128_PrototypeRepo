@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/sign_in.dart';
-import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee_miagao.dart';
-import 'package:kantinir_mobile_app/screens/food_page/food_establishments/aj_foodhub.dart';
-import 'package:kantinir_mobile_app/screens/food_page/food_establishments/el_garaje.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee/48coffee.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee_miagao_backup.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/aj_foodhub/aj_foodhub.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/aj_foodhub_backup.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/el_garaje_backup.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/elgaraje/el_garaje.dart';
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/kubo_resto/kubo_resto.dart';
-import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse_&_coffee.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse/mrj.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse_&_coffee_backup.dart';
 import 'package:kantinir_mobile_app/screens/home/profile_page.dart';
 import 'package:kantinir_mobile_app/screens/housing_page/housingPage.dart';
 import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/arkids_dorm.dart';
@@ -56,7 +60,7 @@ class MyApp extends StatelessWidget {
               } else if (settings.name == 'A & J Food Hub') {
                 return ajFoodHubPage();
               } else if (settings.name == '48 Coffee.Co Miagao') {
-                return coffee48MiagaoPage();
+                return coffee48Page();
               } else if (settings.name == 'Mr. J Chicken House and Cafe') {
                 return mrJChickenHouseCoffee();
               } else if (settings.name == 'Arkids Dorm') {

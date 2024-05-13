@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class elGarajePage extends StatelessWidget {
-  elGarajePage({super.key});
+class elGarajePage_b extends StatelessWidget {
+  elGarajePage_b({super.key});
   final currentUser = FirebaseAuth.instance.currentUser!;
   final TextEditingController commentController = TextEditingController();
   double rating = 0;

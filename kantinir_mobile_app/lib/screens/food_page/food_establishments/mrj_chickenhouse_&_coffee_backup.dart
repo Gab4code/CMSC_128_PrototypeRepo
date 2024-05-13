@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class ajFoodHubPage extends StatelessWidget {
-  ajFoodHubPage({super.key});
+class mrJChickenHouseCoffee_b extends StatelessWidget {
+  mrJChickenHouseCoffee_b({super.key});
 final currentUser = FirebaseAuth.instance.currentUser!;
   final TextEditingController commentController = TextEditingController();
   double rating = 0;
@@ -36,7 +36,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
     };
 
     // Store the review in Firebase
-    FirebaseFirestore.instance.collection('kaon').doc('3').collection("reviews").add(reviewData);
+    FirebaseFirestore.instance.collection('kaon').doc('5').collection("reviews").add(reviewData);
     
     Navigator.of(context).pop();
   }
@@ -45,7 +45,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Aj FoodHub'),
+        title: Text('Mr. J Chicken House & Coffee'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -69,7 +69,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'This is a paragraph describing AJ FoodHub. Add your text here.',
+                'This is a paragraph describing Mr. J Chicken House & Coffee. Add your text here.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(fontSize: 16),
               ),
@@ -169,7 +169,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('kaon')
-                  .doc('3')
+                  .doc('5')
                   .collection('reviews')
                   .snapshots(),
               builder: (context, snapshot) {
@@ -260,7 +260,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                                       onPressed: () {
                                                         FirebaseFirestore.instance
                                                             .collection('kaon')
-                                                            .doc('3')
+                                                            .doc('5')
                                                             .collection('reviews')
                                                             .doc(document.id)
                                                             .delete();
@@ -288,7 +288,6 @@ final currentUser = FirebaseAuth.instance.currentUser!;
 
                 return Center(child: Text(
                   'No reviews yet.',
-                  
                   style: TextStyle(
                     fontSize: 20,
                   ),

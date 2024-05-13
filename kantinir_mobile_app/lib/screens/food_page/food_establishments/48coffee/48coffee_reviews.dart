@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class mrJChickenHouseCoffee extends StatelessWidget {
-  mrJChickenHouseCoffee({super.key});
+class coffee48ReviewPage extends StatelessWidget {
+  coffee48ReviewPage({super.key});
 final currentUser = FirebaseAuth.instance.currentUser!;
   final TextEditingController commentController = TextEditingController();
   double rating = 0;
@@ -36,7 +36,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
     };
 
     // Store the review in Firebase
-    FirebaseFirestore.instance.collection('kaon').doc('5').collection("reviews").add(reviewData);
+    FirebaseFirestore.instance.collection('kaon').doc('4').collection("reviews").add(reviewData);
     
     Navigator.of(context).pop();
   }
@@ -44,51 +44,15 @@ final currentUser = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Mr. J Chicken House & Coffee'),
-      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-                image: DecorationImage(
-                  image: AssetImage('assets/your_image.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SizedBox(height: 20), // Add spacing between image and paragraph
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'This is a paragraph describing Mr. J Chicken House & Coffee. Add your text here.',
-                textAlign: TextAlign.justify,
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-            SizedBox(height: 20), // Add spacing between paragraph and "Menu" header
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Menu',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            // Add menu items or further widgets below as needed
-
             SizedBox(height: 20), // Add spacing between menu and "Review" header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Review',
+                'Reviews',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
@@ -111,32 +75,35 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Leave a review'),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                RatingBar.builder(
-                                  initialRating: rating,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber
+                            content: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  RatingBar.builder(
+                                    initialRating: rating,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemCount: 5,
+                                    itemSize: 30,
+                                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber
+                                    ),
+                                    onRatingUpdate: (value) {
+                                      rating = value;
+                                    },
                                   ),
-                                  onRatingUpdate: (value) {
-                                    rating = value;
-                                  },
-                                ),
-                                TextFormField(
-                                  controller: commentController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Write your review here',
+                                  TextFormField(
+                                    controller: commentController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Write your review here',
+                                    ),
+                                    maxLines: 3,
                                   ),
-                                  maxLines: 3,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             actions: [
                               TextButton(
@@ -169,7 +136,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('kaon')
-                  .doc('5')
+                  .doc('4')
                   .collection('reviews')
                   .snapshots(),
               builder: (context, snapshot) {
@@ -260,7 +227,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                                       onPressed: () {
                                                         FirebaseFirestore.instance
                                                             .collection('kaon')
-                                                            .doc('5')
+                                                            .doc('4')
                                                             .collection('reviews')
                                                             .doc(document.id)
                                                             .delete();
@@ -295,7 +262,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                   ));
               },
             ),
-            
+
           ],
         ),
       ),

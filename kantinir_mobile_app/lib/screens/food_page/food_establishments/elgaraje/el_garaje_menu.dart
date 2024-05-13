@@ -12,14 +12,14 @@ class Food {
   Food({required this.name, required this.vendor, required this.price, required this.category, required this.image_path});
 }
 
-class kuboRestoMenuPage extends StatefulWidget {
-  const kuboRestoMenuPage({Key? key}) : super(key: key);
+class elGarajeMenuPage extends StatefulWidget {
+  const elGarajeMenuPage({Key? key}) : super(key: key);
 
   @override
-  State<kuboRestoMenuPage> createState() => _kuboRestoMenuPageState();
+  State<elGarajeMenuPage> createState() => _elGarajeMenuPageState();
 }
 
-class _kuboRestoMenuPageState extends State<kuboRestoMenuPage> {
+class _elGarajeMenuPageState extends State<elGarajeMenuPage> {
   late List<Food> data = [];
 
    @override
@@ -34,7 +34,7 @@ class _kuboRestoMenuPageState extends State<kuboRestoMenuPage> {
   // Fetch data from kaon/2 collection
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('kaon')
-        .doc('2')
+        .doc('1')
         .collection('fooditem')
         .get();
   // Extract food items from snapshot
@@ -95,7 +95,7 @@ class _kuboRestoMenuPageState extends State<kuboRestoMenuPage> {
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(8),
       image: DecorationImage(
-        image: AssetImage('images/kubo_resto_items/${item.image_path}.jpg'),
+        image: AssetImage('images/el_garaje_items/${item.image_path}.jpg'),
         fit: BoxFit.cover,
       ),
     ),
@@ -106,20 +106,23 @@ class _kuboRestoMenuPageState extends State<kuboRestoMenuPage> {
           SizedBox(width: double.infinity, height: 120), // Placeholder to maintain the height
           SizedBox(width: 5,),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.name,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                SizedBox(height: 1,),
-                Text(
-                  'Price: ₱${item.price}',
-                  style: TextStyle(fontSize: 10, color: Colors.white),
-                ),
-                //Room for more
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(left:8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  SizedBox(height: 1,),
+                  Text(
+                    'Price: ₱${item.price}',
+                    style: TextStyle(fontSize: 10, color: Colors.white),
+                  ),
+                  //Room for more
+                ],
+              ),
             ),
           )
         ],
