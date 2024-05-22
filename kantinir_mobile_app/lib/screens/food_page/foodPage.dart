@@ -38,9 +38,10 @@ class _FoodPageState extends State<FoodPage> {
         .get();
 
     // Extract food items from kaon/1 snapshot
-    snapshot1.docs.forEach((doc) {
-      foods.add(Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
-    });
+    for (var doc in snapshot1.docs) {
+      foods.add(
+          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+    }
 
     // Fetch data from kaon/2 collection
     QuerySnapshot snapshot2 = await FirebaseFirestore.instance
@@ -50,11 +51,12 @@ class _FoodPageState extends State<FoodPage> {
         .get();
 
     // Extract food items from kaon/2 snapshot
-    snapshot2.docs.forEach((doc) {
-      foods.add(Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
-    });
+    for (var doc in snapshot2.docs) {
+      foods.add(
+          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+    }
 
-  // Fetch data from kaon/3 collection
+    // Fetch data from kaon/3 collection
     QuerySnapshot snapshot3 = await FirebaseFirestore.instance
         .collection('kaon')
         .doc('3')
@@ -62,13 +64,12 @@ class _FoodPageState extends State<FoodPage> {
         .get();
 
     // Extract food items from kaon/3 snapshot
-    snapshot3.docs.forEach((doc) {
-      foods.add(Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
-    });
+    for (var doc in snapshot3.docs) {
+      foods.add(
+          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+    }
 
-
-
-   // Fetch data from kaon/4 collection
+    // Fetch data from kaon/4 collection
     QuerySnapshot snapshot4 = await FirebaseFirestore.instance
         .collection('kaon')
         .doc('4')
@@ -76,12 +77,19 @@ class _FoodPageState extends State<FoodPage> {
         .get();
 
     // Extract food items from kaon/4 snapshot
-    snapshot4.docs.forEach((doc) {
-      foods.add(Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
-    });
+    for (var doc in snapshot4.docs) {
+      foods.add(
+          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+    }
+
+    // Sort the foods list by price in ascending order
+    foods
+        .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
     setState(() {
       data = foods;
+      // Assign searchResults to data initially to display all foods sorted by price
+      searchResults = List.from(data);
     });
   }
 
@@ -93,7 +101,8 @@ class _FoodPageState extends State<FoodPage> {
               food.vendor.toLowerCase().contains(query.toLowerCase()))
           .toList();
       //Sort the searchResults based on price
-      searchResults.sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
+      searchResults.sort(
+          (a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
     });
   }
 
@@ -114,7 +123,7 @@ class _FoodPageState extends State<FoodPage> {
                   child: ListTile(
                     title: Text(searchResults[index].name),
                     subtitle: Text(searchResults[index].vendor),
-                    trailing: Text("₱"+searchResults[index].price),
+                    trailing: Text("₱${searchResults[index].price}"),
                   ),
                 );
               },
@@ -139,13 +148,13 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: TextField(
         onChanged: widget.onQueryChanged,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'Search for food here',
-          border: OutlineInputBorder(),
-          prefixIcon: Icon(Icons.search),
+          border: const OutlineInputBorder(),
+          prefixIcon: const Icon(Icons.search),
         ),
       ),
     );
