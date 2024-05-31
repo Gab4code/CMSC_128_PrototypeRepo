@@ -143,6 +143,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
               ),
             ),
           ),
+          SizedBox(height: 10),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -155,6 +156,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
               ),
             ),
           ),
+          SizedBox(height: 5),
           Expanded(
             flex: 3,
             child: FoodPageList(
