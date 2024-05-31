@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           TextButton.icon(
             icon: Icon(Icons.person, color: Colors.white),
-            label: Text('profile', style: TextStyle(color: Colors.white)),
+            label: Text('Profile', style: TextStyle(color: Colors.white)),
             onPressed: () {
               Navigator.pushNamed(context, "/profile");
             },
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             label: Text(
-              'logout',
+              'Logout',
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () async {
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: const [
-          BottomNavigationBarItem(label: "Food", icon: Icon(Icons.sensors)),
+          BottomNavigationBarItem(label: "Food", icon: Icon(Icons.food_bank)),
           BottomNavigationBarItem(
             label: "Home",
             icon: Icon(Icons.home),
