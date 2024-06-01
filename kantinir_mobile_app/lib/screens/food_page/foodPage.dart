@@ -80,6 +80,18 @@ class _FoodPageState extends State<FoodPage> {
       foods.add(Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
     });
 
+    // Fetch data from kaon/5 collection
+    QuerySnapshot snapshot5 = await FirebaseFirestore.instance
+        .collection('kaon')
+        .doc('5')
+        .collection('fooditem')
+        .get();
+
+    // Extract food items from kaon/5 snapshot
+    snapshot5.docs.forEach((doc) {
+      foods.add(Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+    });
+
     setState(() {
       data = foods;
     });
