@@ -44,62 +44,62 @@ class _profilePageState extends State<profilePage> {
     super.dispose();
   }
 
-  Future<void> _selectDate(
-      BuildContext context, Map<String, dynamic> userData) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1950),
-      lastDate: DateTime(2100),
-    );
+  // Future<void> _selectDate(
+  //     BuildContext context, Map<String, dynamic> userData) async {
+  //   final DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(1950),
+  //     lastDate: DateTime(2100),
+  //   );
 
-    if (pickedDate != null && pickedDate != DateTime.now()) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+  //   if (pickedDate != null && pickedDate != DateTime.now()) {
+  //     String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
 
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(currentUser.email)
-          .update({'birthdate': formattedDate});
-    }
-  }
+  //     await FirebaseFirestore.instance
+  //         .collection("Users")
+  //         .doc(currentUser.email)
+  //         .update({'birthdate': formattedDate});
+  //   }
+  // }
 
-  Future<void> _showEducationDropdown(BuildContext context) async {
-    String? newValue = await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Education Level'),
-          content: DropdownButton<String>(
-            value: educationValue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            style: const TextStyle(
-              color: Color.fromARGB(255, 83, 98, 93),
-              fontSize: 17,
-            ),
-            items: educationLevels.map((String educationItem) {
-              return DropdownMenuItem<String>(
-                value: educationItem,
-                child: Text(educationItem),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                educationValue = newValue!;
-              });
-              Navigator.of(context).pop(newValue);
-            },
-          ),
-        );
-      },
-    );
+  // Future<void> _showEducationDropdown(BuildContext context) async {
+  //   String? newValue = await showDialog<String>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Select Education Level'),
+  //         content: DropdownButton<String>(
+  //           value: educationValue,
+  //           icon: const Icon(Icons.keyboard_arrow_down),
+  //           style: const TextStyle(
+  //             color: Color.fromARGB(255, 83, 98, 93),
+  //             fontSize: 17,
+  //           ),
+  //           items: educationLevels.map((String educationItem) {
+  //             return DropdownMenuItem<String>(
+  //               value: educationItem,
+  //               child: Text(educationItem),
+  //             );
+  //           }).toList(),
+  //           onChanged: (String? newValue) {
+  //             setState(() {
+  //               educationValue = newValue!;
+  //             });
+  //             Navigator.of(context).pop(newValue);
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
 
-    if (newValue != null) {
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(currentUser.email)
-          .update({'education': newValue});
-    }
-  }
+  //   if (newValue != null) {
+  //     await FirebaseFirestore.instance
+  //         .collection("Users")
+  //         .doc(currentUser.email)
+  //         .update({'education': newValue});
+  //   }
+  // }
 
   File? _pickedImage;
 
@@ -135,8 +135,10 @@ class _profilePageState extends State<profilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 0, 63, 77),
-          title: Text("User Profile"),
+          backgroundColor: Color(0xFF11CDA7),
+          title: Text("User Profile", style: TextStyle(color: Colors.white)),
+          iconTheme: IconThemeData(
+              color: Colors.white), // Set the color of the back arrow to white
         ),
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
@@ -209,7 +211,7 @@ class _profilePageState extends State<profilePage> {
                         },
                       ),
                       MyListTile(
-                        icon: Icons.manage_accounts,
+                        icon: Icons.email,
                         text: "Email: " + currentUser.email!,
                         onTap: () async {
                           String newEmail = await showDialog(
@@ -268,7 +270,7 @@ class _profilePageState extends State<profilePage> {
                                 },
                               );
 
-                              if (password != null && password.isNotEmpty) {
+                              if (password.isNotEmpty) {
                                 // Re-authenticate the user with their current credentials
                                 AuthCredential credential =
                                     EmailAuthProvider.credential(
@@ -290,20 +292,6 @@ class _profilePageState extends State<profilePage> {
                               print('Error updating email: $e');
                             }
                           }
-                        },
-                      ),
-                      MyListTile(
-                        icon: Icons.calendar_month,
-                        text: 'Birthdate: ' + userData["birthdate"],
-                        onTap: () {
-                          _selectDate(context, userData);
-                        },
-                      ),
-                      MyListTile(
-                        icon: Icons.school,
-                        text: 'Education: ' + userData["education"],
-                        onTap: () {
-                          _showEducationDropdown(context);
                         },
                       ),
                       MyListTile(

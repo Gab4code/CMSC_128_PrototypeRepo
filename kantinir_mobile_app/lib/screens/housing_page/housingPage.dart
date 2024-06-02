@@ -1,17 +1,8 @@
 import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kantinir_mobile_app/services/auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../food_page/foodPage.dart';
-import '../housing_page/housingPage.dart';
 
 class HousingPage extends StatefulWidget {
   const HousingPage({super.key});
@@ -35,6 +26,32 @@ class _housingPageState extends State<HousingPage> {
   bool fliterIsSwitched = false;
 
   double _slider_minimum_budget = 15000;
+  final TextEditingController _budgetController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _budgetController.text = '$_slider_minimum_budget';
+    _budgetController.addListener(_onBudgetChanged);
+  }
+
+  @override
+  void dispose() {
+    _budgetController.dispose();
+    super.dispose();
+  }
+
+  void _onBudgetChanged() {
+    double newBudget =
+        double.tryParse(_budgetController.text) ?? _slider_minimum_budget;
+    if (newBudget > 15000) {
+      _budgetController.text = '15000';
+      newBudget = 15000;
+    }
+    setState(() {
+      _slider_minimum_budget = newBudget.clamp(0, 15000);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,58 +65,40 @@ class _housingPageState extends State<HousingPage> {
                   SizedBox(height: 25),
                   Row(
                     children: [
-                      SizedBox(width: 25),
+                      SizedBox(width: 15),
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
                             _slider_minimum_budget =
                                 (_slider_minimum_budget - 100).clamp(0, 15000);
+                            _budgetController.text = '$_slider_minimum_budget';
                           });
                         },
                         child: Text('-100'),
                       ),
                       SizedBox(width: 10),
                       GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              double newBudget = _slider_minimum_budget;
-                              return AlertDialog(
-                                title: Text('Enter Budget'),
-                                content: TextField(
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (value) {
-                                    newBudget = double.tryParse(value) ??
-                                        _slider_minimum_budget;
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Max: 15K, Min: 0',
-                                  ),
+                        onTap: () {},
+                        child: Row(
+                          children: [
+                            Text(
+                              'Enter Budget: ',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.0,
+                              ),
+                            ),
+                            Container(
+                              width: 60, // Adjust width as needed
+                              child: TextField(
+                                controller: _budgetController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  hintText: '$_slider_minimum_budget',
                                 ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _slider_minimum_budget =
-                                            newBudget.clamp(0, 15000);
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Budget: Php ${_slider_minimum_budget.toString()}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.0,
-                            decoration: TextDecoration.underline,
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(width: 10),
@@ -108,6 +107,7 @@ class _housingPageState extends State<HousingPage> {
                           setState(() {
                             _slider_minimum_budget =
                                 (_slider_minimum_budget + 100).clamp(0, 15000);
+                            _budgetController.text = '$_slider_minimum_budget';
                           });
                         },
                         child: Text('+100'),
@@ -122,6 +122,7 @@ class _housingPageState extends State<HousingPage> {
                     onDragging: (handlerIndex, lowerValue, upperValue) {
                       setState(() {
                         _slider_minimum_budget = lowerValue;
+                        _budgetController.text = '$_slider_minimum_budget';
                       });
                     },
                   ),
@@ -149,7 +150,7 @@ class _housingPageState extends State<HousingPage> {
               // ),
               // Tag filters
               Container(
-                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -171,6 +172,14 @@ class _housingPageState extends State<HousingPage> {
                                   fliterIsSwitched = value;
                                 });
                               },
+                              activeColor:
+                                  Colors.blue, // Customize the active color
+                              activeTrackColor: Colors
+                                  .lightBlue, // Customize the active track color
+                              inactiveThumbColor: Colors
+                                  .grey, // Customize the inactive thumb color
+                              inactiveTrackColor: Colors.grey[
+                                  300], // Customize the inactive track color
                             ),
                           ],
                         ),
@@ -184,11 +193,6 @@ class _housingPageState extends State<HousingPage> {
                                     ChoiceChip(
                                       label: Text(
                                         'Private CR',
-                                        style: TextStyle(
-                                          color: is_private_cr
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
                                       ),
                                       selected: is_private_cr,
                                       onSelected: (bool selected) {
@@ -202,33 +206,18 @@ class _housingPageState extends State<HousingPage> {
                                           }
                                         });
                                       },
-                                      selectedColor: Colors
-                                          .blue[800], // Royal blue when active
-                                      backgroundColor: const Color.fromARGB(255,
-                                          209, 209, 209), // Gray when inactive
-                                      avatar: CircleAvatar(
-                                        backgroundColor: is_private_cr
-                                            ? Colors.blue[800]
-                                            : Colors.grey,
-                                        child: Icon(
-                                          is_private_cr
-                                              ? Icons.check
-                                              : Icons.close,
-                                          color: is_private_cr
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
+                                      // selectedColor: Colors.blue[800],
+                                      // backgroundColor: Colors.grey,
                                     ),
                                     SizedBox(width: 5),
                                     ChoiceChip(
                                       label: Text(
                                         'Allows Cooking',
-                                        style: TextStyle(
-                                          color: is_allows_cooking
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
+                                        // style: TextStyle(
+                                        //   color: is_allows_cooking
+                                        //       ? Colors.white
+                                        //       : Colors.black,
+                                        // ),
                                       ),
                                       selected: is_allows_cooking,
                                       onSelected: (bool selected) {
@@ -243,49 +232,18 @@ class _housingPageState extends State<HousingPage> {
                                           }
                                         });
                                       },
-                                      selectedColor: Colors
-                                          .blue[800], // Royal blue when active
-                                      backgroundColor: const Color.fromARGB(255,
-                                          209, 209, 209), // Gray when inactive
-                                      avatar: CircleAvatar(
-                                        backgroundColor: is_allows_cooking
-                                            ? Colors.blue[800]
-                                            : Colors.grey,
-                                        child: Icon(
-                                          is_allows_cooking
-                                              ? Icons.check
-                                              : Icons.close,
-                                          color: is_allows_cooking
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
+                                      // selectedColor: Colors.blue[800],
+                                      // backgroundColor: Colors.grey,
                                     ),
                                     SizedBox(width: 5),
-                                    // ChoiceChip(
-                                    //   label: Text('is_allows_cooking'),
-                                    //   selected: is_allows_cooking,
-                                    //   onSelected: (bool selected) {
-                                    //     setState(() {
-                                    //       is_allows_cooking = selected;
-                                    //       if (selected) {
-                                    //         array_tag_housing
-                                    //             .add('allows_cooking');
-                                    //       } else {
-                                    //         array_tag_housing
-                                    //             .remove('allows_cooking');
-                                    //       }
-                                    //     });
-                                    //   },
-                                    // ),
                                     ChoiceChip(
                                       label: Text(
                                         'No Curfew',
-                                        style: TextStyle(
-                                          color: is_no_curfew
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
+                                        // style: TextStyle(
+                                        //   color: is_no_curfew
+                                        //       ? Colors.white
+                                        //       : Colors.black,
+                                        // ),
                                       ),
                                       selected: is_no_curfew,
                                       onSelected: (bool selected) {
@@ -299,47 +257,18 @@ class _housingPageState extends State<HousingPage> {
                                           }
                                         });
                                       },
-                                      selectedColor: Colors
-                                          .blue[800], // Royal blue when active
-                                      backgroundColor: const Color.fromARGB(255,
-                                          209, 209, 209), // Gray when inactive
-                                      avatar: CircleAvatar(
-                                        backgroundColor: is_no_curfew
-                                            ? Colors.blue[800]
-                                            : Colors.grey,
-                                        child: Icon(
-                                          is_no_curfew
-                                              ? Icons.check
-                                              : Icons.close,
-                                          color: is_no_curfew
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
+                                      // selectedColor: Colors.blue[800],
+                                      // backgroundColor: Colors.grey,
                                     ),
                                     SizedBox(width: 5),
-                                    // ChoiceChip(
-                                    //   label: Text('is_no_curfew'),
-                                    //   selected: is_no_curfew,
-                                    //   onSelected: (bool selected) {
-                                    //     setState(() {
-                                    //       is_no_curfew = selected;
-                                    //       if (selected) {
-                                    //         array_tag_housing.add('no_curfew');
-                                    //       } else {
-                                    //         array_tag_housing.remove('no_curfew');
-                                    //       }
-                                    //     });
-                                    //   },
-                                    // ),
                                     ChoiceChip(
                                       label: Text(
                                         'Air Condition',
-                                        style: TextStyle(
-                                          color: is_aircondition
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
+                                        // style: TextStyle(
+                                        //   color: is_aircondition
+                                        //       ? Colors.white
+                                        //       : Colors.black,
+                                        // ),
                                       ),
                                       selected: is_aircondition,
                                       onSelected: (bool selected) {
@@ -354,48 +283,18 @@ class _housingPageState extends State<HousingPage> {
                                           }
                                         });
                                       },
-                                      selectedColor: Colors
-                                          .blue[800], // Royal blue when active
-                                      backgroundColor: const Color.fromARGB(255,
-                                          209, 209, 209), // Gray when inactive
-                                      avatar: CircleAvatar(
-                                        backgroundColor: is_aircondition
-                                            ? Colors.blue[800]
-                                            : Colors.grey,
-                                        child: Icon(
-                                          is_aircondition
-                                              ? Icons.check
-                                              : Icons.close,
-                                          color: is_aircondition
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
+                                      // selectedColor: Colors.blue[800],
+                                      // backgroundColor: Colors.grey,
                                     ),
                                     SizedBox(width: 5),
-                                    // ChoiceChip(
-                                    //   label: Text('is_aircondition'),
-                                    //   selected: is_no_curfew,
-                                    //   onSelected: (bool selected) {
-                                    //     setState(() {
-                                    //       is_aircondition = selected;
-                                    //       if (selected) {
-                                    //         array_tag_housing.add('aircondition');
-                                    //       } else {
-                                    //         array_tag_housing
-                                    //             .remove('aircondition');
-                                    //       }
-                                    //     });
-                                    //   },
-                                    // ),
                                     ChoiceChip(
                                       label: Text(
-                                        'Has Refrigirator',
-                                        style: TextStyle(
-                                          color: is_has_refrigirator
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
+                                        'Has Refrigerator',
+                                        // style: TextStyle(
+                                        //   color: is_has_refrigirator
+                                        //       ? Colors.white
+                                        //       : Colors.black,
+                                        // ),
                                       ),
                                       selected: is_has_refrigirator,
                                       onSelected: (bool selected) {
@@ -403,48 +302,16 @@ class _housingPageState extends State<HousingPage> {
                                           is_has_refrigirator = selected;
                                           if (selected) {
                                             array_tag_housing
-                                                .add('has_refrigirator');
+                                                .add('has_refrigerator');
                                           } else {
                                             array_tag_housing
-                                                .remove('has_refrigirator');
+                                                .remove('has_refrigerator');
                                           }
                                         });
                                       },
-                                      selectedColor: Colors
-                                          .blue[800], // Royal blue when active
-                                      backgroundColor: const Color.fromARGB(255,
-                                          209, 209, 209), // Gray when inactive
-                                      avatar: CircleAvatar(
-                                        backgroundColor: is_has_refrigirator
-                                            ? Colors.blue[800]
-                                            : Colors.grey,
-                                        child: Icon(
-                                          is_has_refrigirator
-                                              ? Icons.check
-                                              : Icons.close,
-                                          color: is_has_refrigirator
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
+                                      // selectedColor: Colors.blue[800],
+                                      // backgroundColor: Colors.grey,
                                     ),
-
-                                    // ChoiceChip(
-                                    //   label: Text('is_has_refrigirator'),
-                                    //   selected: is_has_refrigirator,
-                                    //   onSelected: (bool selected) {
-                                    //     setState(() {
-                                    //       is_has_refrigirator = selected;
-                                    //       if (selected) {
-                                    //         array_tag_housing
-                                    //             .add('has_refrigirator');
-                                    //       } else {
-                                    //         array_tag_housing
-                                    //             .remove('has_refrigirator');
-                                    //       }
-                                    //     });
-                                    //   },
-                                    // ),
                                   ],
                                 ),
                               ],
@@ -563,27 +430,15 @@ class _housingPageState extends State<HousingPage> {
 
   Query createQuery(Query queryReference) {
     Query query = queryReference;
-    //query = query.where('housing_tags', arrayContainsAny: array_tag_housing);
-
-    // if (fliterIsSwitched == false) {
-    //   query =
-    //       query.where('min_spend', isLessThanOrEqualTo: _slider_minimum_budget);
-    // }
-
-    if (fliterIsSwitched == false) {
+    if (!fliterIsSwitched) {
       query =
           query.where('min_spend', isLessThanOrEqualTo: _slider_minimum_budget);
     }
-
-    if (fliterIsSwitched == true) {
+    if (fliterIsSwitched) {
       query = query.where('housing_tags', arrayContainsAny: array_tag_housing);
-    }
-
-    if (fliterIsSwitched == true) {
       query =
           query.where('min_spend', isLessThanOrEqualTo: _slider_minimum_budget);
     }
-
     return query;
   }
 
@@ -593,7 +448,6 @@ class _housingPageState extends State<HousingPage> {
       if (snapshot.docs.isEmpty) {
         return 0.0;
       }
-
       double totalRating = 0;
       for (var doc in snapshot.docs) {
         final data = doc.data();
@@ -607,7 +461,6 @@ class _housingPageState extends State<HousingPage> {
           }
         }
       }
-
       final averageRating = totalRating / snapshot.docs.length;
       documentReference.update({
         'averageRating': averageRating

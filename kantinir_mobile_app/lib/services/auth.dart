@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:kantinir_mobile_app/models/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 enum AuthStatus {
   successful,
@@ -52,7 +50,7 @@ class AuthExceptionHandler {
             "The email address is already in use by another account.";
         break;
       default:
-        errorMessage = "An error occured. Please try again later.";
+        errorMessage = "An error occurred. Please try again later.";
     }
     return errorMessage;
   }
@@ -62,6 +60,7 @@ class AuthService {
   static final auth = FirebaseAuth.instance;
   static late AuthStatus _status;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //create a stream
   MyUser? _userFromFirebaseUser(User? user) {
@@ -88,15 +87,49 @@ class AuthService {
   }
 
   //sign in with email & password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future<MyUser?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      User? user = result.user;
+      final userCredential = await _auth.signInWithCredential(
+        EmailAuthProvider.credential(email: email, password: password),
+      );
+      return _userFromFirebaseUser(userCredential.user);
     } catch (e) {
-      print(e.toString());
       return null;
     }
+  }
+
+  // register with email & password
+  Future registerWithEmailAndPassword(
+      String email, String username, String password,
+      [void Function(String)? onError]) async {
+    try {
+      if (await isEmailTaken(email) || await isUsernameTaken(username)) {
+        onError?.call("Email or username already in use.");
+        return;
+      }
+
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await _firestore.collection("Users").doc(email).set({
+        'username': username,
+      });
+
+      return _userFromFirebaseUser(userCredential.user);
+    } catch (e) {
+      onError?.call(e.toString());
+    }
+  }
+
+  Future<bool> isEmailTaken(String email) async =>
+      (await _auth.fetchSignInMethodsForEmail(email)).isNotEmpty;
+
+  Future<bool> isUsernameTaken(String username) async {
+    final usersSnap = await _firestore.collection("Users").get();
+    return usersSnap.docs.any((doc) => doc.get('username') == username);
   }
 
   Future<AuthStatus> resetPassword({required String email}) async {
@@ -109,39 +142,24 @@ class AuthService {
     return _status;
   }
 
-  // register with email & password
-  Future registerWithEmailAndPassword(
-      String email,
-      String username,
-      String password,
-      String fcolor,
-      String bday,
-      String education,
-      Function(String)? errorCallback) async {
+  // Check if email already exists
+  Future<bool> emailExists(String email) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      User? user = result.user;
-
-      FirebaseFirestore.instance
-          .collection("Users")
-          .doc(result.user!.email)
-          .set({
-        'username': username, // initial user
-        'birthdate': bday,
-        'education': education,
-        'fcolor': fcolor,
-        //add more fields
-      });
+      final result = await _auth.fetchSignInMethodsForEmail(email);
+      return result.isNotEmpty;
     } catch (e) {
-      print(e.toString());
-      if (errorCallback != null) {
-        errorCallback(e.toString());
-      }
+      return false;
     }
   }
 
-  // check if a user with given email, username, fcolor, bday, and education exists
+  // Check if username already exists
+  Future<bool> usernameExists(String username) async {
+    final result = await _firestore
+        .collection('Users')
+        .where('username', isEqualTo: username)
+        .get();
+    return result.docs.isNotEmpty;
+  }
 
   // sign out
   Future signOut() async {

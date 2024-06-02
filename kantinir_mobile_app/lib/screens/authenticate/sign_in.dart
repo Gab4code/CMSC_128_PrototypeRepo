@@ -29,6 +29,8 @@ class _SignInPageState extends State<SignInPage> {
   late FocusNode _emailFocusNode;
   late FocusNode _passwordFocusNode;
 
+  bool _obscurePassword = true;
+
   @override
   void initState() {
     super.initState();
@@ -87,8 +89,15 @@ class _SignInPageState extends State<SignInPage> {
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w400,
                       ),
-                      validator: (val) =>
-                          val!.isEmpty ? 'Enter an email' : null,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Enter an email';
+                        } else if (!val.contains('@') ||
+                            !val.contains('.com')) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
                       onChanged: (val) {
                         setState(() => email = val);
                       },
@@ -103,12 +112,24 @@ class _SignInPageState extends State<SignInPage> {
                         horizontal: 16, vertical: 10),
                     child: TextFormField(
                       focusNode: _passwordFocusNode,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       // Set keyboard type for password
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter your password',
                         prefixIcon: Icon(Icons.lock, color: Color(0xFFB6B6B6)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -185,6 +206,15 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  if (error.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        error,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
@@ -228,7 +258,7 @@ class _SignInPageState extends State<SignInPage> {
         password,
       );
       if (result == null) {
-        setState(() => error = 'credentials are not valid.');
+        setState(() => error = 'Invalid credentials. Please try again.');
       }
     }
   }
