@@ -5,6 +5,40 @@ import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/shared/constants.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/register.dart';
 
+// Validator classes
+abstract class StringValidator {
+  ValidationResult validate(String value);
+}
+
+RegExp _emailRegExp = RegExp(
+  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+);
+
+class ValidationResult {
+  ValidationResult({this.isValid = false, this.text});
+  final bool isValid;
+  final String? text;
+}
+
+class EmailValidator implements StringValidator {
+  EmailValidator(this.label);
+  final String label;
+
+  @override
+  ValidationResult validate(String value, {List<String>? targets}) {
+    if (value.isEmpty) {
+      return ValidationResult(text: 'Please enter $label');
+    }
+
+    if (!_emailRegExp.hasMatch(value)) {
+      return ValidationResult(text: 'Please enter the correct $label');
+    }
+
+    return ValidationResult(isValid: true);
+  }
+}
+
+// SignInPage class
 class SignInPage extends StatefulWidget {
   final Function toggleView;
   const SignInPage({Key? key, required this.toggleView}) : super(key: key);
@@ -30,6 +64,9 @@ class _SignInPageState extends State<SignInPage> {
   late FocusNode _passwordFocusNode;
 
   bool _obscurePassword = true;
+
+  // Email validator instance
+  final EmailValidator emailValidator = EmailValidator('email');
 
   @override
   void initState() {
@@ -90,13 +127,8 @@ class _SignInPageState extends State<SignInPage> {
                         fontWeight: FontWeight.w400,
                       ),
                       validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter an email';
-                        } else if (!val.contains('@') ||
-                            !val.contains('.com')) {
-                          return 'Enter a valid email';
-                        }
-                        return null;
+                        final result = emailValidator.validate(val!);
+                        return result.isValid ? null : result.text;
                       },
                       onChanged: (val) {
                         setState(() => email = val);
