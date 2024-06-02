@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/forgotPasswordPage.dart';
+import 'package:kantinir_mobile_app/screens/home/home.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/shared/constants.dart';
@@ -26,6 +27,7 @@ class EmailValidator implements StringValidator {
 
   @override
   ValidationResult validate(String value, {List<String>? targets}) {
+    value = sanitizeInput(value);
     if (value.isEmpty) {
       return ValidationResult(text: 'Please enter $label');
     }
@@ -38,6 +40,10 @@ class EmailValidator implements StringValidator {
   }
 }
 
+String sanitizeInput(String input) {
+  return input.replaceAll(RegExp(r'[^\w\s@.]'), '');
+}
+
 // SignInPage class
 class SignInPage extends StatefulWidget {
   final Function toggleView;
@@ -47,6 +53,7 @@ class SignInPage extends StatefulWidget {
   State<SignInPage> createState() => _SignInPageState();
 }
 
+// SignInPage class
 class _SignInPageState extends State<SignInPage> {
   final AuthService _auth = AuthService();
 
@@ -291,6 +298,11 @@ class _SignInPageState extends State<SignInPage> {
       );
       if (result == null) {
         setState(() => error = 'Invalid credentials. Please try again.');
+        // } else {
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => HomePage()),
+        //   );
       }
     }
   }

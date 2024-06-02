@@ -9,6 +9,7 @@ class EmailValidator implements StringValidator {
 
   @override
   ValidationResult validate(String value, {List<String>? targets}) {
+    value = sanitizeInput(value);
     if (value.isEmpty) {
       return ValidationResult(text: 'Please enter $label');
     }
@@ -19,6 +20,10 @@ class EmailValidator implements StringValidator {
 
     return ValidationResult(isValid: true);
   }
+}
+
+String sanitizeInput(String input) {
+  return input.replaceAll(RegExp(r'[^\w\s@.]'), '');
 }
 
 abstract class StringValidator {
@@ -135,11 +140,12 @@ class _RegisterState extends State<Register> {
                       fontWeight: FontWeight.w400,
                     ),
                     validator: (val) {
-                      ValidationResult result = emailValidator.validate(val!);
+                      val = sanitizeInput(val!);
+                      ValidationResult result = emailValidator.validate(val);
                       return result.isValid ? null : result.text;
                     },
                     onChanged: (val) {
-                      setState(() => email = val);
+                      setState(() => email = sanitizeInput(val));
                     },
                   ),
                 ),
@@ -166,7 +172,7 @@ class _RegisterState extends State<Register> {
                     validator: (val) =>
                         val!.isEmpty ? 'Enter your username' : null,
                     onChanged: (val) {
-                      setState(() => username = val);
+                      setState(() => username = sanitizeInput(val));
                     },
                   ),
                 ),
@@ -207,7 +213,7 @@ class _RegisterState extends State<Register> {
                         ? 'Enter a password 6+ chars long'
                         : null,
                     onChanged: (val) {
-                      setState(() => password = val);
+                      setState(() => password = sanitizeInput(val));
                     },
                   ),
                 ),
@@ -245,12 +251,13 @@ class _RegisterState extends State<Register> {
                       fontWeight: FontWeight.w400,
                     ),
                     validator: (val) {
-                      if (val!.isEmpty) return 'Enter a password';
+                      val = sanitizeInput(val!);
+                      if (val.isEmpty) return 'Enter a password';
                       if (val != password) return 'Passwords do not match';
                       return null;
                     },
                     onChanged: (val) {
-                      setState(() => confirmPassword = val);
+                      setState(() => confirmPassword = sanitizeInput(val));
                     },
                   ),
                 ),
