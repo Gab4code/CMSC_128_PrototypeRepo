@@ -128,7 +128,8 @@ class _FoodPageState extends State<FoodPage> {
                         : Colors.white, // Alternate colors
                     child: ListTile(
                       title: Text(searchResults[index].name),
-                      subtitle: Text(searchResults[index].vendor),
+                      subtitle: Text(
+                          '${searchResults[index].vendor} - ${searchResults[index].category}'),
                       trailing: Text("₱${searchResults[index].price}"),
                     ),
                   ),

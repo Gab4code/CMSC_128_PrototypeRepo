@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage> {
           'KanTinir',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Color(0xFF11CDA7),
@@ -46,7 +47,9 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           TextButton.icon(
             icon: Icon(Icons.person, color: Colors.white),
-            label: Text('Profile', style: TextStyle(color: Colors.white)),
+            label: Text('Profile',
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
             onPressed: () {
               Navigator.pushNamed(context, "/profile");
             },
@@ -58,7 +61,8 @@ class _HomePageState extends State<HomePage> {
             ),
             label: Text(
               'Logout',
-              style: TextStyle(color: Colors.white),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               await _auth.signOut();

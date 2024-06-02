@@ -156,52 +156,60 @@ class _profilePageState extends State<profilePage> {
           iconTheme: IconThemeData(
               color: Colors.white), // Set the color of the back arrow to white
         ),
-        body: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection("Users")
-              .doc(currentUser.email)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final userData = snapshot.data!.data() as Map<String, dynamic>;
+        body: SingleChildScrollView(
+          child: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection("Users")
+                .doc(currentUser.email)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final userData = snapshot.data!.data() as Map<String, dynamic>;
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          _pickImage();
-                        },
-                        child: Center(
-                          child: userData['profileImageURL'] != null
-                              ? ClipOval(
-                                  child: Image.network(
-                                  userData['profileImageURL'],
-                                  width: 150,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                ))
-                              : Icon(
-                                  Icons.person,
-                                  size: 150,
-                                ),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(height: 50),
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _pickImage();
+                          },
+                          child: Center(
+                            child: userData['profileImageURL'] != null
+                                ? ClipOval(
+                                    child: Image.network(
+                                    userData['profileImageURL'],
+                                    width: 150,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  ))
+                                : Icon(
+                                    Icons.person,
+                                    size: 150,
+                                  ),
+                          ),
                         ),
-                      ),
-                      MyListTile(
-                        icon: Icons.manage_accounts,
-                        text: "Username: " + userData["username"],
-                        onTap: () {
-                          showDialog(
+                        MyListTile(
+                          icon: Icons.manage_accounts,
+                          text: "Username: " + userData["username"],
+                          onTap: () {
+                            showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text('Edit Username'),
-                                  content: TextField(
-                                    controller: usernameController,
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter new Username',
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                        TextField(
+                                          controller: usernameController,
+                                          decoration: InputDecoration(
+                                            hintText: 'Enter new Username',
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   actions: <Widget>[
@@ -211,127 +219,130 @@ class _profilePageState extends State<profilePage> {
                                         String newUsername =
                                             usernameController.text.trim();
 
-                                        //Update the Firestore document with the new username
+                                        // Update the Firestore document with the new username
                                         await FirebaseFirestore.instance
                                             .collection("Users")
                                             .doc(currentUser.email)
                                             .update({"username": newUsername});
 
                                         Navigator.of(context)
-                                            .pop(); //close the dialog
+                                            .pop(); // Close the dialog
                                       },
-                                    )
+                                    ),
                                   ],
                                 );
-                              });
-                        },
-                      ),
-                      MyListTile(
-                        icon: Icons.email,
-                        text: "Email: " + currentUser.email!,
-                      ),
-                      MyListTile(
-                        icon: Icons.admin_panel_settings,
-                        text: 'Change Password',
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Change Password'),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: passwordController,
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                          labelText: 'Current Password'),
+                              },
+                            );
+                          },
+                        ),
+                        MyListTile(
+                          icon: Icons.email,
+                          text: "Email: " + currentUser.email!,
+                        ),
+                        MyListTile(
+                          icon: Icons.admin_panel_settings,
+                          text: 'Change Password',
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Change Password'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextField(
+                                        controller: passwordController,
+                                        obscureText: true,
+                                        decoration: InputDecoration(
+                                            labelText: 'Current Password'),
+                                      ),
+                                      TextField(
+                                        controller: emailController,
+                                        obscureText: true,
+                                        decoration: InputDecoration(
+                                            labelText: 'New Password'),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
-                                    TextField(
-                                      controller: emailController,
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                          labelText: 'New Password'),
+                                    TextButton(
+                                      child: Text('Update'),
+                                      onPressed: () async {
+                                        String currentPassword =
+                                            passwordController.text.trim();
+                                        String newPassword =
+                                            emailController.text.trim();
+
+                                        await _changePassword(
+                                            currentPassword, newPassword);
+
+                                        // Clear the text fields after updating password
+                                        passwordController.clear();
+                                        emailController.clear();
+
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Success'),
+                                              content: Text(
+                                                  'Password changed successfully!'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('OK'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
                                     ),
                                   ],
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text('Update'),
-                                    onPressed: () async {
-                                      String currentPassword =
-                                          passwordController.text.trim();
-                                      String newPassword =
-                                          emailController.text.trim();
-
-                                      await _changePassword(
-                                          currentPassword, newPassword);
-
-                                      // Clear the text fields after updating password
-                                      passwordController.clear();
-                                      emailController.clear();
-
-                                      Navigator.of(context)
-                                          .pop(); // Close the dialog
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Success'),
-                                            content: Text(
-                                                'Password changed successfully!'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: Text('OK'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 26.0),
-                    child: Container(
-                      color: Colors.grey,
-                      child: MyListTile(
-                        icon: Icons.logout,
-                        text: 'Log Out',
-                        onTap: () async {
-                          await _auth.signOut();
-                          Navigator.pop(context);
-                        },
-                      ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  )
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error${snapshot.error}'));
-            }
+                    SizedBox(height: 100),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 26.0),
+                      child: Container(
+                        color: Colors.grey,
+                        child: MyListTile(
+                          icon: Icons.logout,
+                          text: 'Log Out',
+                          onTap: () async {
+                            await _auth.signOut();
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error${snapshot.error}'));
+              }
 
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ));
   }
 }
