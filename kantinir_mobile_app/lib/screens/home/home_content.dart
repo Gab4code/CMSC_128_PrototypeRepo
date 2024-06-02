@@ -47,6 +47,7 @@ class _Home_contentPageState extends State<Home_contentPage> {
   bool _isTinir = false;
   Widget currentPage = Container();
   int currentIndex = 0;
+  Color color = Color.fromARGB(255, 0, 191, 153);
 
   void updateCollection(bool isKaon) {
     setState(() {
@@ -112,12 +113,12 @@ class _Home_contentPageState extends State<Home_contentPage> {
   static const LatLng gumamela = LatLng(10.649349782428317, 122.22687774953113);
   static const LatLng kp_vision =
       LatLng(10.654375291531712, 122.23145595324026);
-  static const LatLng lampirong =
-      LatLng(10.64891466416987, 122.22734214160364);
+  static const LatLng lampirong = LatLng(10.64891466416987, 122.22734214160364);
   static const LatLng royal_angels =
       LatLng(10.65382778694199, 122.22926060905857);
 
-  static const LatLng _initialPosition = LatLng(10.642314141212928, 122.23080753789462);
+  static const LatLng _initialPosition =
+      LatLng(10.642314141212928, 122.23080753789462);
 
   late GoogleMapController _controller;
 
@@ -133,67 +134,66 @@ class _Home_contentPageState extends State<Home_contentPage> {
           icon: BitmapDescriptor.defaultMarker,
           position: coffe48,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => coffee48Page(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => coffee48Page(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("ajfoodhub"),
           icon: BitmapDescriptor.defaultMarker,
           position: ajfoodhub,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ajFoodHubPage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ajFoodHubPage(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("elgaraje"),
           icon: BitmapDescriptor.defaultMarker,
           position: elgaraje,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => elGarajePage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => elGarajePage(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("kubo"),
           icon: BitmapDescriptor.defaultMarker,
           position: kubo,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => kuboRestoPage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => kuboRestoPage(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("mrj"),
           icon: BitmapDescriptor.defaultMarker,
           position: mrj,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => mrJChickenHouseCoffee(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => mrJChickenHouseCoffee(),
+              ),
+            );
+          },
         ),
-        
       };
     } else {
       return {
@@ -202,65 +202,65 @@ class _Home_contentPageState extends State<Home_contentPage> {
           icon: BitmapDescriptor.defaultMarker,
           position: arkids,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => arkidsDormPage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => arkidsDormPage(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("gumamela"),
           icon: BitmapDescriptor.defaultMarker,
           position: gumamela,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => gumamelaPage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => gumamelaPage(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("kp_vision"),
           icon: BitmapDescriptor.defaultMarker,
           position: kp_vision,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => kpVisionPage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => kpVisionPage(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("lampirong"),
           icon: BitmapDescriptor.defaultMarker,
           position: lampirong,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => lampirongPage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => lampirongPage(),
+              ),
+            );
+          },
         ),
         Marker(
           markerId: MarkerId("royal_angels"),
           icon: BitmapDescriptor.defaultMarker,
           position: royal_angels,
           onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => royalAngelsPage(),
-                    ),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => royalAngelsPage(),
+              ),
+            );
+          },
         ),
       };
     }
@@ -316,42 +316,38 @@ class _Home_contentPageState extends State<Home_contentPage> {
                       child: GestureDetector(
                           onTap: () {
                             updateCollection(true);
-                            _isKaon = !_isKaon;
-                            _isTinir = !_isTinir;
+                            _isKaon = true;
+                            _isTinir = false;
                           },
                           child: _isKaon == true
-                              ? Image.asset(
-                                  'images/food_lua3.png',
-                                  //width: 50,
-                                  height: 100,
-                                  fit: BoxFit.contain,
+                              ? Icon(
+                                  Icons.fastfood,
+                                  size: 100,
+                                  color: color,
                                 )
-                              : Image.asset(
-                                  'images/food_lua4.png',
-                                  //width: 50,
-                                  height: 100,
-                                  fit: BoxFit.contain,
+                              : Icon(
+                                  Icons.fastfood_outlined,
+                                  size: 100,
+                                  color: color,
                                 )),
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           updateCollection(false);
-                          _isKaon = !_isKaon;
-                          _isTinir = !_isTinir;
+                          _isKaon = false;
+                          _isTinir = true;
                         },
                         child: _isTinir == true
-                            ? Image.asset(
-                                'images/Housing_lua3.png',
-                                //width: 50,
-                                height: 100,
-                                fit: BoxFit.contain,
+                            ? Icon(
+                                Icons.house,
+                                size: 100,
+                                color: color,
                               )
-                            : Image.asset(
-                                'images/Housing_lua4.png',
-                                //width: 50,
-                                height: 100,
-                                fit: BoxFit.contain,
+                            : Icon(
+                                Icons.house_outlined,
+                                size: 100,
+                                color: color,
                               ),
                       ),
                     ),
