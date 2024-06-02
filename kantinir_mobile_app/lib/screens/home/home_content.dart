@@ -93,69 +93,80 @@ class _Home_contentPageState extends State<Home_contentPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          SizedBox(height: 10),
           Center(
-            child: Container(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "What are you looking for?",
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.bold,
+            child: Text(
+              'Popular',
+              style: TextStyle(
                   fontSize: 20,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          Center(
+            child: Text(
+              'Establishments',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          // Center(
+          //   child: Container(
+          //     padding: EdgeInsets.all(16.0),
+          //     child: Text(
+          //       "What are you looking for?",
+          //       style: TextStyle(
+          //         fontFamily: 'Poppins',
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: 20,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Center(
+            child: Expanded(
+              child: Center(
+                child: Row(
+                  //child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          updateCollection(true);
+                        },
+                        child: Image.asset(
+                          'images/food_lua2.jpg',
+                          //width: 50,
+                          height: 100,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          updateCollection(false);
+                        },
+                        child: Image.asset(
+                          'images/Housing_lua2.jpg',
+                          //width: 50,
+                          height: 100,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                  ],
+                  //),
                 ),
               ),
             ),
           ),
-          Center(
-            child: Expanded(
-              child: Row(
-                //child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        updateCollection(true);
-                      },
-                      child: Image.asset(
-                        'images/food_lua2.jpg',
-                        //width: 50,
-                        height: 100,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        updateCollection(false);
-                      },
-                      child: Image.asset(
-                        'images/Housing_lua2.jpg',
-                        //width: 50,
-                        height: 100,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ],
-                //),
-              ),
-            ),
-          ),
           SizedBox(height: 10),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'RECOMMENDATIONS',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
           SizedBox(height: 5),
           Expanded(
             flex: 3,
@@ -194,7 +205,7 @@ class FoodPageList extends StatelessWidget {
             child: Align(
               alignment: Alignment.topCenter,
               child: Container(
-                height: 350,
+                height: 400,
                 child: StreamBuilder<List<QueryDocumentSnapshot>>(
                   stream: _mergeAndSortCollectionStreams(),
                   builder: (context,

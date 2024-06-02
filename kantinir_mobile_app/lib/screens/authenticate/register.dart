@@ -112,6 +112,7 @@ class _RegisterState extends State<Register> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       hintText: 'Enter your email',
@@ -127,7 +128,14 @@ class _RegisterState extends State<Register> {
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,
                     ),
-                    validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return 'Enter an email';
+                      } else if (!val.contains('@') || !val.contains('.com')) {
+                        return 'Enter a valid email';
+                      }
+                      return null;
+                    },
                     onChanged: (val) {
                       print(email);
                       setState(() => email = val);
