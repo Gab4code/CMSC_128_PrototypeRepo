@@ -1,12 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:kantinir_mobile_app/screens/home/home.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
-import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
-import 'package:kantinir_mobile_app/shared/constants.dart';
-import 'package:flutter_test/flutter_test.dart';
-// import 'package:mockito/mockito.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -35,36 +29,12 @@ class _RegisterState extends State<Register> {
   // text field state
   String email = '';
   String password = '';
-  String fcolor = '';
-  String password1 = '';
   String confirmPassword = '';
-  String error = '';
-  String bday = '';
   String username = '';
+  String error = '';
 
-  TextEditingController dateInput =
-      TextEditingController(); // Initialize the controller
-
-  String selectedEducationLevel = '';
-  String educationValue = 'Choose education level';
-  var educationLevels = [
-    'Choose education level',
-    'Elementary',
-    'High School',
-    'Bachelor\'s Degree',
-    'Master\'s Degree',
-    'Ph.D.',
-  ];
-  String selectedColorLevel = '';
-  String colorValue = 'Choose a color';
-  var colorLevels = [
-    'Choose a color',
-    'red',
-    'orange',
-    'yellow',
-    'green',
-    'blue',
-  ];
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +54,7 @@ class _RegisterState extends State<Register> {
                       icon: const Icon(
                         Icons.arrow_back,
                         size: 40,
-                        color: Color(0xFF22A1BB),
+                        color: Color(0xFF11CDA7),
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -137,7 +107,6 @@ class _RegisterState extends State<Register> {
                       return null;
                     },
                     onChanged: (val) {
-                      print(email);
                       setState(() => email = val);
                     },
                   ),
@@ -165,7 +134,6 @@ class _RegisterState extends State<Register> {
                     validator: (val) =>
                         val!.isEmpty ? 'Enter your username' : null,
                     onChanged: (val) {
-                      print(username);
                       setState(() => username = val);
                     },
                   ),
@@ -175,11 +143,24 @@ class _RegisterState extends State<Register> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: TextFormField(
+                    obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       prefixIcon:
                           const Icon(Icons.lock, color: Color(0xFFB6B6B6)),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -190,25 +171,37 @@ class _RegisterState extends State<Register> {
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,
                     ),
-                    obscureText: true,
                     validator: (val) => val!.length < 6
                         ? 'Enter a password 6+ chars long'
                         : null,
                     onChanged: (val) {
-                      setState(() => password1 = val);
+                      setState(() => password = val);
                     },
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: TextFormField(
+                    obscureText: _obscureConfirmPassword,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
-                      hintText: 'Confirm your password',
+                      hintText: 'Re-enter your password',
                       prefixIcon:
                           const Icon(Icons.lock, color: Color(0xFFB6B6B6)),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureConfirmPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureConfirmPassword = !_obscureConfirmPassword;
+                          });
+                        },
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -219,124 +212,71 @@ class _RegisterState extends State<Register> {
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,
                     ),
-                    obscureText: true,
-                    validator: (val) =>
-                        val != password1 ? 'Passwords do not match' : null,
+                    validator: (val) {
+                      if (val!.isEmpty) return 'Enter a password';
+                      if (val != password) return 'Passwords do not match';
+                      return null;
+                    },
                     onChanged: (val) {
-                      print(confirmPassword);
                       setState(() => confirmPassword = val);
                     },
                   ),
                 ),
-                SizedBox(height: 20.0),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: TextField(
-                    style: TextStyle(color: Colors.black),
-                    controller: dateInput,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.calendar_today),
-                      labelText: "Enter Birthdate",
-                    ),
-                    readOnly: true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1950),
-                        lastDate: DateTime(2100),
-                      );
-
-                      if (pickedDate != null) {
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
-                        setState(() {
-                          dateInput.text = formattedDate;
-                          bday = formattedDate;
-                        });
-                      }
-                    },
-                  ),
+                const SizedBox(height: 12.0),
+                Text(
+                  error,
+                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
                 ),
-                SizedBox(height: 12.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 80),
-                    child: DropdownButton(
-                      value: educationValue,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 83, 98, 93), fontSize: 17),
-                      items: educationLevels.map((String educationItem) {
-                        return DropdownMenuItem(
-                          value: educationItem,
-                          child: Text(educationItem),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          educationValue = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 110),
-                    child: DropdownButton(
-                      value: colorValue,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 83, 98, 93), fontSize: 17),
-                      items: colorLevels.map((String coloritem) {
-                        return DropdownMenuItem(
-                          value: coloritem,
-                          child: Text(coloritem),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          colorValue = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 0, 113, 62)),
-                  child: const Text('Register',
-                      style: TextStyle(color: Colors.white)),
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF11CDA7),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('Register'),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       dynamic result = await _auth.registerWithEmailAndPassword(
-                          email,
-                          username,
-                          confirmPassword,
-                          colorValue,
-                          bday,
-                          educationValue,
-                          _handleRegisterError);
-                      Navigator.pop(context);
-
+                        email,
+                        username,
+                        password,
+                        _handleRegisterError,
+                      );
                       if (result == null) {
-                        setState(() => error = _errorMessage!);
+                        setState(() => error = 'Please supply a valid email');
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
                       }
                     }
                   },
                 ),
-                SizedBox(height: 12.0),
-                Text(
-                  error,
-                  style: TextStyle(color: Colors.red, fontSize: 14.0),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Already have an account? Sign in',
+                    style: TextStyle(
+                      color: Color(0xFF11CDA7),
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 180),
+                const SizedBox(height: 12.0),
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
               ],
             ),
           ),

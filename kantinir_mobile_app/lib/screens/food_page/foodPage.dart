@@ -122,10 +122,15 @@ class _FoodPageState extends State<FoodPage> {
                   onTap: () {
                     Navigator.pushNamed(context, searchResults[index].vendor);
                   },
-                  child: ListTile(
-                    title: Text(searchResults[index].name),
-                    subtitle: Text(searchResults[index].vendor),
-                    trailing: Text("₱${searchResults[index].price}"),
+                  child: Container(
+                    color: index % 2 == 0
+                        ? Color.fromARGB(255, 237, 237, 237)
+                        : Colors.white, // Alternate colors
+                    child: ListTile(
+                      title: Text(searchResults[index].name),
+                      subtitle: Text(searchResults[index].vendor),
+                      trailing: Text("₱${searchResults[index].price}"),
+                    ),
                   ),
                 );
               },
