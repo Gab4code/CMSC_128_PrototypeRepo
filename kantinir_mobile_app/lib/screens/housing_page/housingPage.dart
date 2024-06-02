@@ -15,7 +15,7 @@ class _housingPageState extends State<HousingPage> {
   final CollectionReference _tinir =
       FirebaseFirestore.instance.collection("tinir");
   String search_name_input = "";
-  List<String> array_tag_housing = ["base_tag"];
+  List<String> array_tag_housing = [];
 
   bool is_private_cr = false;
   bool is_allows_cooking = false;
@@ -156,6 +156,7 @@ class _housingPageState extends State<HousingPage> {
                   children: [
                     Column(
                       children: <Widget>[
+                        // if (fliterIsSwitched)
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Wrap(
@@ -287,6 +288,8 @@ class _housingPageState extends State<HousingPage> {
                             ],
                           ),
                         )
+                        // else
+                        //   Text("")
                       ],
                     ),
                   ],
@@ -398,11 +401,11 @@ class _housingPageState extends State<HousingPage> {
 
   Query createQuery(Query queryReference) {
     Query query = queryReference;
-    if (!fliterIsSwitched) {
+    if (array_tag_housing.isEmpty) {
       query =
           query.where('min_spend', isLessThanOrEqualTo: _slider_minimum_budget);
-    }
-    if (fliterIsSwitched) {
+    } else {
+      print(array_tag_housing);
       query = query.where('housing_tags', arrayContainsAny: array_tag_housing);
       query =
           query.where('min_spend', isLessThanOrEqualTo: _slider_minimum_budget);
