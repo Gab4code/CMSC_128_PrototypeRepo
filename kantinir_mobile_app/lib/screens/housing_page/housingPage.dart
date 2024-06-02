@@ -156,169 +156,137 @@ class _housingPageState extends State<HousingPage> {
                   children: [
                     Column(
                       children: <Widget>[
-                        Row(
-                          children: [
-                            Text(
-                              'Enable Housing Filter',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.0,
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Wrap(
+                            children: [
+                              Row(
+                                children: [
+                                  ChoiceChip(
+                                    label: Text(
+                                      'Private CR',
+                                    ),
+                                    selected: is_private_cr,
+                                    onSelected: (bool selected) {
+                                      setState(() {
+                                        is_private_cr = selected;
+                                        if (selected) {
+                                          array_tag_housing.add('private_cr');
+                                        } else {
+                                          array_tag_housing
+                                              .remove('private_cr');
+                                        }
+                                      });
+                                    },
+                                    // selectedColor: Colors.blue[800],
+                                    // backgroundColor: Colors.grey,
+                                  ),
+                                  SizedBox(width: 5),
+                                  ChoiceChip(
+                                    label: Text(
+                                      'Allows Cooking',
+                                      // style: TextStyle(
+                                      //   color: is_allows_cooking
+                                      //       ? Colors.white
+                                      //       : Colors.black,
+                                      // ),
+                                    ),
+                                    selected: is_allows_cooking,
+                                    onSelected: (bool selected) {
+                                      setState(() {
+                                        is_allows_cooking = selected;
+                                        if (selected) {
+                                          array_tag_housing
+                                              .add('allows_cooking');
+                                        } else {
+                                          array_tag_housing
+                                              .remove('allows_cooking');
+                                        }
+                                      });
+                                    },
+                                    // selectedColor: Colors.blue[800],
+                                    // backgroundColor: Colors.grey,
+                                  ),
+                                  SizedBox(width: 5),
+                                  ChoiceChip(
+                                    label: Text(
+                                      'No Curfew',
+                                      // style: TextStyle(
+                                      //   color: is_no_curfew
+                                      //       ? Colors.white
+                                      //       : Colors.black,
+                                      // ),
+                                    ),
+                                    selected: is_no_curfew,
+                                    onSelected: (bool selected) {
+                                      setState(() {
+                                        is_no_curfew = selected;
+                                        if (selected) {
+                                          array_tag_housing.add('no_curfew');
+                                        } else {
+                                          array_tag_housing.remove('no_curfew');
+                                        }
+                                      });
+                                    },
+                                    // selectedColor: Colors.blue[800],
+                                    // backgroundColor: Colors.grey,
+                                  ),
+                                  SizedBox(width: 5),
+                                  ChoiceChip(
+                                    label: Text(
+                                      'Air Condition',
+                                      // style: TextStyle(
+                                      //   color: is_aircondition
+                                      //       ? Colors.white
+                                      //       : Colors.black,
+                                      // ),
+                                    ),
+                                    selected: is_aircondition,
+                                    onSelected: (bool selected) {
+                                      setState(() {
+                                        is_aircondition = selected;
+                                        if (selected) {
+                                          array_tag_housing.add('aircondition');
+                                        } else {
+                                          array_tag_housing
+                                              .remove('aircondition');
+                                        }
+                                      });
+                                    },
+                                    // selectedColor: Colors.blue[800],
+                                    // backgroundColor: Colors.grey,
+                                  ),
+                                  SizedBox(width: 5),
+                                  ChoiceChip(
+                                    label: Text(
+                                      'Has Refrigerator',
+                                      // style: TextStyle(
+                                      //   color: is_has_refrigirator
+                                      //       ? Colors.white
+                                      //       : Colors.black,
+                                      // ),
+                                    ),
+                                    selected: is_has_refrigirator,
+                                    onSelected: (bool selected) {
+                                      setState(() {
+                                        is_has_refrigirator = selected;
+                                        if (selected) {
+                                          array_tag_housing
+                                              .add('has_refrigerator');
+                                        } else {
+                                          array_tag_housing
+                                              .remove('has_refrigerator');
+                                        }
+                                      });
+                                    },
+                                    // selectedColor: Colors.blue[800],
+                                    // backgroundColor: Colors.grey,
+                                  ),
+                                ],
                               ),
-                            ),
-                            Switch(
-                              value: fliterIsSwitched,
-                              onChanged: (value) {
-                                setState(() {
-                                  fliterIsSwitched = value;
-                                });
-                              },
-                              activeColor:
-                                  Colors.blue, // Customize the active color
-                              activeTrackColor: Colors
-                                  .lightBlue, // Customize the active track color
-                              inactiveThumbColor: Colors
-                                  .grey, // Customize the inactive thumb color
-                              inactiveTrackColor: Colors.grey[
-                                  300], // Customize the inactive track color
-                            ),
-                          ],
-                        ),
-                        if (fliterIsSwitched)
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Wrap(
-                              children: [
-                                Row(
-                                  children: [
-                                    ChoiceChip(
-                                      label: Text(
-                                        'Private CR',
-                                      ),
-                                      selected: is_private_cr,
-                                      onSelected: (bool selected) {
-                                        setState(() {
-                                          is_private_cr = selected;
-                                          if (selected) {
-                                            array_tag_housing.add('private_cr');
-                                          } else {
-                                            array_tag_housing
-                                                .remove('private_cr');
-                                          }
-                                        });
-                                      },
-                                      // selectedColor: Colors.blue[800],
-                                      // backgroundColor: Colors.grey,
-                                    ),
-                                    SizedBox(width: 5),
-                                    ChoiceChip(
-                                      label: Text(
-                                        'Allows Cooking',
-                                        // style: TextStyle(
-                                        //   color: is_allows_cooking
-                                        //       ? Colors.white
-                                        //       : Colors.black,
-                                        // ),
-                                      ),
-                                      selected: is_allows_cooking,
-                                      onSelected: (bool selected) {
-                                        setState(() {
-                                          is_allows_cooking = selected;
-                                          if (selected) {
-                                            array_tag_housing
-                                                .add('allows_cooking');
-                                          } else {
-                                            array_tag_housing
-                                                .remove('allows_cooking');
-                                          }
-                                        });
-                                      },
-                                      // selectedColor: Colors.blue[800],
-                                      // backgroundColor: Colors.grey,
-                                    ),
-                                    SizedBox(width: 5),
-                                    ChoiceChip(
-                                      label: Text(
-                                        'No Curfew',
-                                        // style: TextStyle(
-                                        //   color: is_no_curfew
-                                        //       ? Colors.white
-                                        //       : Colors.black,
-                                        // ),
-                                      ),
-                                      selected: is_no_curfew,
-                                      onSelected: (bool selected) {
-                                        setState(() {
-                                          is_no_curfew = selected;
-                                          if (selected) {
-                                            array_tag_housing.add('no_curfew');
-                                          } else {
-                                            array_tag_housing
-                                                .remove('no_curfew');
-                                          }
-                                        });
-                                      },
-                                      // selectedColor: Colors.blue[800],
-                                      // backgroundColor: Colors.grey,
-                                    ),
-                                    SizedBox(width: 5),
-                                    ChoiceChip(
-                                      label: Text(
-                                        'Air Condition',
-                                        // style: TextStyle(
-                                        //   color: is_aircondition
-                                        //       ? Colors.white
-                                        //       : Colors.black,
-                                        // ),
-                                      ),
-                                      selected: is_aircondition,
-                                      onSelected: (bool selected) {
-                                        setState(() {
-                                          is_aircondition = selected;
-                                          if (selected) {
-                                            array_tag_housing
-                                                .add('aircondition');
-                                          } else {
-                                            array_tag_housing
-                                                .remove('aircondition');
-                                          }
-                                        });
-                                      },
-                                      // selectedColor: Colors.blue[800],
-                                      // backgroundColor: Colors.grey,
-                                    ),
-                                    SizedBox(width: 5),
-                                    ChoiceChip(
-                                      label: Text(
-                                        'Has Refrigerator',
-                                        // style: TextStyle(
-                                        //   color: is_has_refrigirator
-                                        //       ? Colors.white
-                                        //       : Colors.black,
-                                        // ),
-                                      ),
-                                      selected: is_has_refrigirator,
-                                      onSelected: (bool selected) {
-                                        setState(() {
-                                          is_has_refrigirator = selected;
-                                          if (selected) {
-                                            array_tag_housing
-                                                .add('has_refrigerator');
-                                          } else {
-                                            array_tag_housing
-                                                .remove('has_refrigerator');
-                                          }
-                                        });
-                                      },
-                                      // selectedColor: Colors.blue[800],
-                                      // backgroundColor: Colors.grey,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        else
-                          Text("")
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ],

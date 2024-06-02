@@ -43,6 +43,8 @@ class _Home_contentPageState extends State<Home_contentPage> {
 
   final currentUser = FirebaseAuth.instance.currentUser!;
   bool _showImage = false;
+  bool _isKaon = true;
+  bool _isTinir = false;
   Widget currentPage = Container();
   int currentIndex = 0;
 
@@ -312,28 +314,45 @@ class _Home_contentPageState extends State<Home_contentPage> {
                     SizedBox(width: 20),
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {
-                          updateCollection(true);
-                        },
-                        child: Image.asset(
-                          'images/food_lua2.jpg',
-                          //width: 50,
-                          height: 100,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                          onTap: () {
+                            updateCollection(true);
+                            _isKaon = !_isKaon;
+                            _isTinir = !_isTinir;
+                          },
+                          child: _isKaon == true
+                              ? Image.asset(
+                                  'images/food_lua3.png',
+                                  //width: 50,
+                                  height: 100,
+                                  fit: BoxFit.contain,
+                                )
+                              : Image.asset(
+                                  'images/food_lua4.png',
+                                  //width: 50,
+                                  height: 100,
+                                  fit: BoxFit.contain,
+                                )),
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           updateCollection(false);
+                          _isKaon = !_isKaon;
+                          _isTinir = !_isTinir;
                         },
-                        child: Image.asset(
-                          'images/Housing_lua2.jpg',
-                          //width: 50,
-                          height: 100,
-                          fit: BoxFit.contain,
-                        ),
+                        child: _isTinir == true
+                            ? Image.asset(
+                                'images/Housing_lua3.png',
+                                //width: 50,
+                                height: 100,
+                                fit: BoxFit.contain,
+                              )
+                            : Image.asset(
+                                'images/Housing_lua4.png',
+                                //width: 50,
+                                height: 100,
+                                fit: BoxFit.contain,
+                              ),
                       ),
                     ),
                     SizedBox(width: 20),
@@ -469,7 +488,9 @@ class FoodPageList extends StatelessWidget {
                                               BorderRadius.circular(8.0),
                                         ),
                                         child: ListTile(
-                                          title: Text(records["name"]),
+                                          title: Text(
+                                            records["name"],
+                                          ),
                                           //subtitle: Text(records["owner"] + '\n' + (records["fb link"]) + '\n' + (records["location"])),
                                           trailing: Text(
                                               'Average Rating: ${averageRating.toStringAsFixed(1)}'),
