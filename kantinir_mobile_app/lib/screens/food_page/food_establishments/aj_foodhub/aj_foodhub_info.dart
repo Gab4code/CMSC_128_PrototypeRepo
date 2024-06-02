@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ajFoodHubInfoPage extends StatefulWidget {
   const ajFoodHubInfoPage({super.key});
@@ -15,6 +16,15 @@ class _ajFoodHubInfoPageState extends State<ajFoodHubInfoPage> {
       return snapshot.data()?['averageRating'] as double?;
     }
     return null;
+  }
+
+  static const LatLng location =
+      LatLng(10.641543474891401, 122.23463168207635);
+
+  late GoogleMapController _controller;
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
   }
 
   @override
@@ -175,6 +185,23 @@ class _ajFoodHubInfoPageState extends State<ajFoodHubInfoPage> {
                   ),
                 ],
               ),
+            ),
+            SizedBox(height: 5,),
+              Center(
+              child: Container(
+                  width: 340,
+                  height: 200,
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition:
+                        CameraPosition(target: location, zoom: 15),
+                    markers: {
+                      Marker(
+                          markerId: MarkerId("_targetLocation"),
+                          icon: BitmapDescriptor.defaultMarker,
+                          position: location),
+                    },
+                  )),
             ),
         ],
       ),

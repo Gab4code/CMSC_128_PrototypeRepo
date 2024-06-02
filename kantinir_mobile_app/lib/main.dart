@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kantinir_mobile_app/map_test.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/sign_in.dart';
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee/48coffee.dart';
@@ -12,11 +13,16 @@ import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_ch
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse_&_coffee_backup.dart';
 import 'package:kantinir_mobile_app/screens/home/profile_page.dart';
 import 'package:kantinir_mobile_app/screens/housing_page/housingPage.dart';
-import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/arkids_dorm.dart';
-import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/gumamela.dart';
-import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/kp_vision.dart';
-import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/lampirong.dart';
-import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/royal_angels_dorm.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/arkids/arkids_dorm.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/arkids_dorm_backup.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/gumamela/gumamela.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/gumamela_backup.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/kp_vision/kp_vision.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/kp_vision_backup.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/lampirong/lampirong.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/lampirong_backup.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/royal_angels/royal_angels_dorm.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/royal_angels_dorm_backup.dart';
 import 'package:kantinir_mobile_app/screens/onboarding/onboarding1.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -79,7 +85,9 @@ class MyApp extends StatelessWidget {
           }
         },
         debugShowCheckedModeBanner: false,
-        home: Onboarding1(),
+        home:
+        // MapPage(), 
+        Onboarding1(),
         routes: {
           '/profile': (context) => profilePage(),
         },

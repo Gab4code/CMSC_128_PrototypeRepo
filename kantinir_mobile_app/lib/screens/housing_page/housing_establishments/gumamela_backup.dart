@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class royalAngelsPage extends StatelessWidget {
-  royalAngelsPage({super.key});
+class gumamelaPage_b extends StatelessWidget {
+  gumamelaPage_b({super.key});
 final currentUser = FirebaseAuth.instance.currentUser!;
   final TextEditingController commentController = TextEditingController();
   double rating = 0;
@@ -36,7 +36,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
     };
 
     // Store the review in Firebase
-    FirebaseFirestore.instance.collection('tinir').doc('3').collection("reviews").add(reviewData);
+    FirebaseFirestore.instance.collection('tinir').doc('5').collection("reviews").add(reviewData);
     
     Navigator.of(context).pop();
   }
@@ -45,7 +45,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Royal Angels Deluxe Dormtelle'),
+        title: Text('Balay Gumamela'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -60,7 +60,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                 ),
                 borderRadius: BorderRadius.circular(10.0),
                 image: DecorationImage(
-                  image: AssetImage('assets/your_image.jpg'),
+                  image: AssetImage('images/Balay Gumamela UPV dorm.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -69,7 +69,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'This is a paragraph describing Royal Angels Deluxe Dormtelle. Add your text here.',
+                'Balay Gumamela is A UPV dorm famous for its famous All girls dorm befitting of its name of the beautiful flower gumamela',
                 textAlign: TextAlign.justify,
                 style: TextStyle(fontSize: 16),
               ),
@@ -77,10 +77,22 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             SizedBox(height: 20), // Add spacing between paragraph and "Menu" header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Menu',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              child: Column(
+                children: [
+                  Text(
+                    'Information:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Name: Balay Gumamela \n Owner: Mary Ann Morano \n Contact no: 09778323266 \n Location: Bacauan, Miagao, Iloilo"
+                    ),
+                  ),
+                ],
               ),
+              
+              
             ),
             // Add menu items or further widgets below as needed
 
@@ -169,7 +181,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('tinir')
-                  .doc('3')
+                  .doc('5')
                   .collection('reviews')
                   .snapshots(),
               builder: (context, snapshot) {
@@ -260,7 +272,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                                       onPressed: () {
                                                         FirebaseFirestore.instance
                                                             .collection('tinir')
-                                                            .doc('3')
+                                                            .doc('5')
                                                             .collection('reviews')
                                                             .doc(document.id)
                                                             .delete();

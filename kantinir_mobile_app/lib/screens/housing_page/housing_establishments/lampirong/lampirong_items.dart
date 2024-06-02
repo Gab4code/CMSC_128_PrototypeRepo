@@ -1,30 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class Food {
+class House {
   final String name;
-  final String vendor;
-  final String price;
   final String category;
   final String image_path;
 
-  Food(
-      {required this.name,
-      required this.vendor,
-      required this.price,
-      required this.category,
-      required this.image_path});
+  House({required this.name, required this.category, required this.image_path});
 }
 
-class coffee48MenuPage extends StatefulWidget {
-  const coffee48MenuPage({Key? key}) : super(key: key);
+class lampirongItemPage extends StatefulWidget {
+  const lampirongItemPage({Key? key}) : super(key: key);
 
   @override
-  State<coffee48MenuPage> createState() => _coffee48MenuPageState();
+  State<lampirongItemPage> createState() => _lampirongItemPageState();
 }
 
-class _coffee48MenuPageState extends State<coffee48MenuPage> {
-  late List<Food> data = [];
+class _lampirongItemPageState extends State<lampirongItemPage> {
+  late List<House> data = [];
 
   @override
   void initState() {
@@ -33,33 +26,31 @@ class _coffee48MenuPageState extends State<coffee48MenuPage> {
   }
 
   void fetchData() async {
-    List<Food> foods = [];
+    List<House> facilities = [];
 
-    // Fetch data from kaon/2 collection
+    // Fetch data from tinir/1 collection
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('kaon')
+        .collection('tinir')
         .doc('4')
-        .collection('fooditem')
+        .collection('facilityitems')
         .get();
     // Extract food items from snapshot
     snapshot.docs.forEach((doc) {
-      foods.add(Food(
+      facilities.add(House(
           name: doc['name'],
-          vendor: doc['vendor'],
-          price: doc['price'],
           category: doc['category'],
           image_path: doc['image_path']));
     });
 
     setState(() {
-      data = foods;
+      data = facilities;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     // Group food items by category
-    Map<String, List<Food>> foodItemsByCategory = {};
+    Map<String, List<House>> foodItemsByCategory = {};
     data.forEach((food) {
       String category = food.category;
       if (!foodItemsByCategory.containsKey(category)) {
@@ -73,7 +64,7 @@ class _coffee48MenuPageState extends State<coffee48MenuPage> {
         itemCount: foodItemsByCategory.length,
         itemBuilder: (context, index) {
           String category = foodItemsByCategory.keys.elementAt(index);
-          List<Food> items = foodItemsByCategory[category]!;
+          List<House> items = foodItemsByCategory[category]!;
           return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -105,7 +96,7 @@ class _coffee48MenuPageState extends State<coffee48MenuPage> {
                           borderRadius: BorderRadius.circular(8),
                           image: DecorationImage(
                             image: AssetImage(
-                                'images/48coffee_items/${item.image_path}.jpg'),
+                                'images/lampirong_items/${item.image_path}.jpg'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -144,19 +135,7 @@ class _coffee48MenuPageState extends State<coffee48MenuPage> {
                                       SizedBox(
                                         height: 1,
                                       ),
-                                      Text(
-                                        'Price: ₱${item.price}',
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                            shadows: [
-                                              Shadow(
-                                                color: Colors.black,
-                                                offset: Offset(1, 1),
-                                                blurRadius: 2,
-                                              ),
-                                            ]),
-                                      ),
+
                                       //Room for more
                                     ],
                                   ),

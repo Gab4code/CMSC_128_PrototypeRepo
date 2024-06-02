@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class kuboRestoInfoPage extends StatefulWidget {
-  const kuboRestoInfoPage({super.key});
+class royalAngelsInfoPage extends StatefulWidget {
+  const royalAngelsInfoPage({super.key});
 
   @override
-  State<kuboRestoInfoPage> createState() => _kuboRestoInfoPageState();
+  State<royalAngelsInfoPage> createState() => _royalAngelsInfoPageState();
 }
 
-class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
+class _royalAngelsInfoPageState extends State<royalAngelsInfoPage> {
   Future<double?> _fetchRating() async {
-    final snapshot = await FirebaseFirestore.instance.collection('kaon').doc('2').get();
+    final snapshot = await FirebaseFirestore.instance.collection('tinir').doc('3').get();
     if (snapshot.exists) {
       return snapshot.data()?['averageRating'] as double?;
     }
     return null;
   }
 
-   static const LatLng location =
-      LatLng(10.653040111908794, 122.22824011091275);
+  static const LatLng location =
+      LatLng(10.65382778694199, 122.22926060905857);
 
   late GoogleMapController _controller;
 
@@ -37,7 +37,7 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
               height: MediaQuery.of(context).size.height * 0.3,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('images/Kubo Resto.jpg'),
+                  image: AssetImage('images/royal_angels_logo.jpg'),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -51,6 +51,7 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData && snapshot.data != null) {
                    String formattedRating = snapshot.data!.toStringAsFixed(2);
+        
                   return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                    child: Container(
@@ -63,6 +64,7 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                        Text(
+                        
                           'Average Rating: $formattedRating',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16),
@@ -83,22 +85,37 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'A humble Restaurant in the heart of Mat-y, Miagao. Open for Dine-in, Take-out and Deliveries!',
+                'ENJOY YOUR STAY FOR AS LOW AS 398/person per night with inclusions such as unlimited use of water, easy access to toilet & bath & use of electricity. ',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               ),
             ),
-            
             SizedBox(height: 10,),
             Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Icon(Icons.phone),
+                      SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          '0948 023 9632',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Icon(Icons.phone),
+                    Icon(Icons.person),
                     SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        '0908 600 1710',
+                        'Ms. Joy',
                         textAlign: TextAlign.left,
                         style: TextStyle(fontSize: 16),
                       ),
@@ -114,7 +131,7 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
                     SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        'Balay Cawayan, Hollywood Street, Mat-y, Miagao ',
+                        'Beside UPV Mat-y Gate, Quezon Street, Miagao, Iloilo.',
                         textAlign: TextAlign.left,
                         style: TextStyle(fontSize: 16),
                       ),
@@ -126,11 +143,11 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Icon(Icons.sunny),
+                    Icon(Icons.calendar_month),
                     SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        'From Monday to Sunday',
+                        'Average Monthly Rent: ₱2500',
                         textAlign: TextAlign.left,
                         style: TextStyle(fontSize: 16),
                       ),
@@ -142,43 +159,11 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Icon(Icons.schedule),
+                    Icon(Icons.inventory),
                     SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        'From 7AM til 8PM',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Icon(Icons.two_wheeler),
-                    SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        'For Dine-in, Take-out and Delivery',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Icon(Icons.payment),
-                    SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        'Accepts payments thru Gcash and COD',
+                        'Payment Inclusion: Free Water',
                         textAlign: TextAlign.left,
                         style: TextStyle(fontSize: 16),
                       ),
@@ -187,22 +172,22 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
                 ),
               ),
               SizedBox(height: 5,),
-              Center(
-              child: Container(
-                  width: 340,
-                  height: 200,
-                  child: GoogleMap(
-                    onMapCreated: _onMapCreated,
-                    initialCameraPosition:
-                        CameraPosition(target: location, zoom: 15),
-                    markers: {
-                      Marker(
-                          markerId: MarkerId("_targetLocation"),
-                          icon: BitmapDescriptor.defaultMarker,
-                          position: location),
-                    },
-                  )),
-            ),
+                Center(
+                child: Container(
+                    width: 340,
+                    height: 200,
+                    child: GoogleMap(
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition:
+                          CameraPosition(target: location, zoom: 15),
+                      markers: {
+                        Marker(
+                            markerId: MarkerId("_targetLocation"),
+                            icon: BitmapDescriptor.defaultMarker,
+                            position: location),
+                      },
+                    )),
+              ),
           ],
         ),
       ),

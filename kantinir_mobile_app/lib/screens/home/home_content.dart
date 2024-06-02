@@ -5,6 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee/48coffee.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/aj_foodhub/aj_foodhub.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/elgaraje/el_garaje.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/kubo_resto/kubo_resto.dart';
+import 'package:kantinir_mobile_app/screens/food_page/food_establishments/mrj_chickenhouse/mrj.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/arkids/arkids_dorm.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/gumamela/gumamela.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/kp_vision/kp_vision.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/lampirong/lampirong.dart';
+import 'package:kantinir_mobile_app/screens/housing_page/housing_establishments/royal_angels/royal_angels_dorm.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -87,6 +98,172 @@ class _Home_contentPageState extends State<Home_contentPage> {
         },
       );
     });
+  }
+
+  //Food locations:
+  static const LatLng coffe48 = LatLng(10.644219962559625, 122.23453346858548);
+  static const LatLng ajfoodhub =
+      LatLng(10.641543474891401, 122.23463168207635);
+  static const LatLng elgaraje = LatLng(10.642538230966712, 122.23808618022197);
+  static const LatLng kubo = LatLng(10.653040111908794, 122.22824011091275);
+  static const LatLng mrj = LatLng(10.646931169482333, 122.23547955324015);
+  //Housing locations:
+  static const LatLng arkids = LatLng(10.63980614399443, 122.20935600720381);
+  static const LatLng gumamela = LatLng(10.649349782428317, 122.22687774953113);
+  static const LatLng kp_vision =
+      LatLng(10.654375291531712, 122.23145595324026);
+  static const LatLng lampirong =
+      LatLng(10.64891466416987, 122.22734214160364);
+  static const LatLng royal_angels =
+      LatLng(10.65382778694199, 122.22926060905857);
+
+  static const LatLng _initialPosition = LatLng(10.642314141212928, 122.23080753789462);
+
+  late GoogleMapController _controller;
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
+  }
+
+  Set<Marker> _getMarkers() {
+    if (currentCollection == _kaon) {
+      return {
+        Marker(
+          markerId: MarkerId("coffee48"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: coffe48,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => coffee48Page(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("ajfoodhub"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: ajfoodhub,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ajFoodHubPage(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("elgaraje"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: elgaraje,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => elGarajePage(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("kubo"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: kubo,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => kuboRestoPage(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("mrj"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: mrj,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => mrJChickenHouseCoffee(),
+                    ),
+                  );
+                },
+        ),
+        
+      };
+    } else {
+      return {
+        Marker(
+          markerId: MarkerId("arkids"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: arkids,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => arkidsDormPage(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("gumamela"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: gumamela,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => gumamelaPage(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("kp_vision"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: kp_vision,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => kpVisionPage(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("lampirong"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: lampirong,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => lampirongPage(),
+                    ),
+                  );
+                },
+        ),
+        Marker(
+          markerId: MarkerId("royal_angels"),
+          icon: BitmapDescriptor.defaultMarker,
+          position: royal_angels,
+          onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => royalAngelsPage(),
+                    ),
+                  );
+                },
+        ),
+      };
+    }
   }
 
   @override
@@ -186,6 +363,26 @@ class _Home_contentPageState extends State<Home_contentPage> {
             ),
           ),
           SizedBox(height: 10),
+          Center(
+            child: Container(
+              width: 380,
+              height: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // Background color of the container
+                border: Border.all(
+                  color: Colors.grey, // Border color
+                  width: 2, // Border width
+                ),
+              ),
+              child: GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: _initialPosition,
+                    zoom: 13,
+                  ),
+                  markers: _getMarkers()),
+            ),
+          ),
           SizedBox(height: 5),
           Expanded(
             flex: 3,

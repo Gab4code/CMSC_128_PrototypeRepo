@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class arkidsDormPage extends StatelessWidget {
-  arkidsDormPage({super.key});
+class royalAngelsPage_b extends StatelessWidget {
+  royalAngelsPage_b({super.key});
 final currentUser = FirebaseAuth.instance.currentUser!;
   final TextEditingController commentController = TextEditingController();
   double rating = 0;
@@ -36,7 +36,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
     };
 
     // Store the review in Firebase
-    FirebaseFirestore.instance.collection('tinir').doc('1').collection("reviews").add(reviewData);
+    FirebaseFirestore.instance.collection('tinir').doc('3').collection("reviews").add(reviewData);
     
     Navigator.of(context).pop();
   }
@@ -45,7 +45,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Arkids Dorm'),
+        title: Text('Royal Angels Deluxe Dormtelle'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -69,7 +69,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'This is a paragraph describing Arkids Dorm. Add your text here.',
+                'This is a paragraph describing Royal Angels Deluxe Dormtelle. Add your text here.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(fontSize: 16),
               ),
@@ -169,7 +169,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('tinir')
-                  .doc('1')
+                  .doc('3')
                   .collection('reviews')
                   .snapshots(),
               builder: (context, snapshot) {
@@ -260,7 +260,7 @@ final currentUser = FirebaseAuth.instance.currentUser!;
                                                       onPressed: () {
                                                         FirebaseFirestore.instance
                                                             .collection('tinir')
-                                                            .doc('1')
+                                                            .doc('3')
                                                             .collection('reviews')
                                                             .doc(document.id)
                                                             .delete();

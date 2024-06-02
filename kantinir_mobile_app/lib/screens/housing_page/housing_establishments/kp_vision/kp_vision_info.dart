@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class elGarajeInfoPage extends StatefulWidget {
-  const elGarajeInfoPage({super.key});
+class kpVisionInfoPage extends StatefulWidget {
+  const kpVisionInfoPage({super.key});
 
   @override
-  State<elGarajeInfoPage> createState() => _elGarajeInfoPageState();
+  State<kpVisionInfoPage> createState() => _kpVisionInfoPageState();
 }
 
-class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
+class _kpVisionInfoPageState extends State<kpVisionInfoPage> {
   Future<double?> _fetchRating() async {
-    final snapshot = await FirebaseFirestore.instance.collection('kaon').doc('1').get();
+    final snapshot = await FirebaseFirestore.instance.collection('tinir').doc('2').get();
     if (snapshot.exists) {
       return snapshot.data()?['averageRating'] as double?;
     }
@@ -19,7 +19,7 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
   }
 
   static const LatLng location =
-      LatLng(10.642538230966712, 122.23808618022197);
+      LatLng(10.654375291531712, 122.23145595324026);
 
   late GoogleMapController _controller;
 
@@ -36,7 +36,7 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
             height: MediaQuery.of(context).size.height * 0.3,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('images/El Garaje.jpg'),
+                image: AssetImage('images/kp_vision_logo.jpg'),
                 fit: BoxFit.contain,
               ),
             ),
@@ -84,7 +84,7 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              'Quality and affordable food and drinks in Miagao.',
+              'FULLY PACKED WITH EVERYTHING YOU NEED.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
             ),
@@ -98,7 +98,7 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
                     SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        '0995 819 1149',
+                        '0921 673 3571 / 0912 876 3266',
                         textAlign: TextAlign.left,
                         style: TextStyle(fontSize: 16),
                       ),
@@ -106,6 +106,22 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
                   ],
                 ),
               ),
+              Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Icon(Icons.person),
+                  SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      'N / A',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -114,7 +130,7 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
                   SizedBox(width: 5),
                   Expanded(
                     child: Text(
-                      'Ubos Ilawod, Miagao, Iloilo',
+                      'Brgy. Bagumbayan, Miagao, Iloilo.,New York Street, Iloilo City, Philippines ',
                       textAlign: TextAlign.left,
                       style: TextStyle(fontSize: 16),
                     ),
@@ -126,11 +142,11 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Icon(Icons.sunny),
+                  Icon(Icons.calendar_month),
                   SizedBox(width: 5),
                   Expanded(
                     child: Text(
-                      'From Monday to Saturday',
+                      'Average Monthly Rent: ₱2500',
                       textAlign: TextAlign.left,
                       style: TextStyle(fontSize: 16),
                     ),
@@ -142,43 +158,11 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Icon(Icons.schedule),
+                  Icon(Icons.inventory),
                   SizedBox(width: 5),
                   Expanded(
                     child: Text(
-                      'From 10AM to 8PM',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Icon(Icons.two_wheeler),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      'For Dine-in, Take-out and Delivery',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Icon(Icons.payment),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      'Accepts payments thru Gcash and COD',
+                      'Payment Inclusion: Free Water, Free Wifi, Free Gym Use',
                       textAlign: TextAlign.left,
                       style: TextStyle(fontSize: 16),
                     ),
