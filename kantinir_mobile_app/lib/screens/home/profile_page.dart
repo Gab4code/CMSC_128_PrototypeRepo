@@ -60,6 +60,11 @@ class _profilePageState extends State<profilePage> {
     super.dispose();
   }
 
+  Future<bool> isUsernameTaken(String username) async {
+    final usersSnap =
+        await FirebaseFirestore.instance.collection("Users").get();
+    return usersSnap.docs.any((doc) => doc.get('username') == username);
+  }
   // Future<void> _selectDate(
   //     BuildContext context, Map<String, dynamic> userData) async {
   //   final DateTime? pickedDate = await showDatePicker(
@@ -218,15 +223,41 @@ class _profilePageState extends State<profilePage> {
                                       onPressed: () async {
                                         String newUsername =
                                             usernameController.text.trim();
+                                        if (await isUsernameTaken(
+                                            newUsername)) {
+                                          print(newUsername + " is Taken");
 
-                                        // Update the Firestore document with the new username
-                                        await FirebaseFirestore.instance
-                                            .collection("Users")
-                                            .doc(currentUser.email)
-                                            .update({"username": newUsername});
+                                          // Show an alert dialog
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Username Taken"),
+                                                content: Text(
+                                                    "The username \"$newUsername\" already exists. Please choose a different username."),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text("OK"),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          // Update the Firestore document with the new username
+                                          await FirebaseFirestore.instance
+                                              .collection("Users")
+                                              .doc(currentUser.email)
+                                              .update(
+                                                  {"username": newUsername});
 
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        }
                                       },
                                     ),
                                   ],
