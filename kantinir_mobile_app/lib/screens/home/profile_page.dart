@@ -37,6 +37,22 @@ class _profilePageState extends State<profilePage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController dateInput = TextEditingController();
+  Future<void> _changePassword(
+      String currentPassword, String newPassword) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final cred = EmailAuthProvider.credential(
+        email: user!.email!, password: currentPassword);
+
+    try {
+      await user.reauthenticateWithCredential(cred);
+      await user.updatePassword(newPassword);
+      print('Password updated successfully!');
+    } catch (error) {
+      print('Error updating password: $error');
+      // Handle error here
+    }
+  }
+
   @override
   void dispose() {
     // Dispose the controller when the state is disposed
@@ -213,92 +229,81 @@ class _profilePageState extends State<profilePage> {
                       MyListTile(
                         icon: Icons.email,
                         text: "Email: " + currentUser.email!,
-                        onTap: () async {
-                          String newEmail = await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              TextEditingController emailController =
-                                  TextEditingController();
-                              return AlertDialog(
-                                title: Text('Change Email'),
-                                content: TextField(
-                                  controller: emailController,
-                                  decoration: InputDecoration(
-                                      hintText: 'Enter new Email'),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('Update'),
-                                    onPressed: () {
-                                      String updatedEmail =
-                                          emailController.text.trim();
-                                      Navigator.of(context).pop(updatedEmail);
-                                    },
-                                  )
-                                ],
-                              );
-                            },
-                          );
-                          if (newEmail != null && newEmail.isNotEmpty) {
-                            try {
-                              // Prompt the user to re-enter their password for reauthentication
-                              String password = await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  TextEditingController passwordController =
-                                      TextEditingController();
-                                  return AlertDialog(
-                                    title: Text('Re-enter Password'),
-                                    content: TextField(
-                                      controller: passwordController,
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                          hintText: 'Enter your password'),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text('Confirm'),
-                                        onPressed: () {
-                                          String enteredPassword =
-                                              passwordController.text.trim();
-                                          Navigator.of(context)
-                                              .pop(enteredPassword);
-                                        },
-                                      )
-                                    ],
-                                  );
-                                },
-                              );
-
-                              if (password.isNotEmpty) {
-                                // Re-authenticate the user with their current credentials
-                                AuthCredential credential =
-                                    EmailAuthProvider.credential(
-                                  email: currentUser.email!,
-                                  password: password,
-                                );
-
-                                await currentUser
-                                    .reauthenticateWithCredential(credential);
-
-                                // Update email
-                                await currentUser.updateEmail(newEmail);
-
-                                // Show a success message
-                                print('Update Email Success!');
-                              }
-                            } catch (e) {
-                              //Show an error message if the update fails
-                              print('Error updating email: $e');
-                            }
-                          }
-                        },
                       ),
                       MyListTile(
                         icon: Icons.admin_panel_settings,
                         text: 'Change Password',
                         onTap: () {
-                          //Password tap functionality (edit user)
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Change Password'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      controller: passwordController,
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                          labelText: 'Current Password'),
+                                    ),
+                                    TextField(
+                                      controller: emailController,
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                          labelText: 'New Password'),
+                                    ),
+                                  ],
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Update'),
+                                    onPressed: () async {
+                                      String currentPassword =
+                                          passwordController.text.trim();
+                                      String newPassword =
+                                          emailController.text.trim();
+
+                                      await _changePassword(
+                                          currentPassword, newPassword);
+
+                                      // Clear the text fields after updating password
+                                      passwordController.clear();
+                                      emailController.clear();
+
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Success'),
+                                            content: Text(
+                                                'Password changed successfully!'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
                     ],
