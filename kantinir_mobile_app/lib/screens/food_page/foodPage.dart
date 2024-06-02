@@ -5,8 +5,13 @@ class Food {
   final String name;
   final String vendor;
   final String price;
+  final String category;
 
-  Food({required this.name, required this.vendor, required this.price});
+  Food(
+      {required this.name,
+      required this.vendor,
+      required this.price,
+      required this.category});
 }
 
 class FoodPage extends StatefulWidget {
@@ -18,8 +23,9 @@ class FoodPage extends StatefulWidget {
 
 class _FoodPageState extends State<FoodPage> {
   late List<Food> data;
-
   List<Food> searchResults = [];
+  List<String> categories = [];
+  List<String> selectedCategories = [];
 
   @override
   void initState() {
@@ -30,56 +36,22 @@ class _FoodPageState extends State<FoodPage> {
   void fetchData() async {
     List<Food> foods = [];
 
-    // Fetch data from kaon/1 collection
-    QuerySnapshot snapshot1 = await FirebaseFirestore.instance
-        .collection('kaon')
-        .doc('1')
-        .collection('fooditem')
-        .get();
+    // Fetch data from kaon collections
+    for (int i = 1; i <= 4; i++) {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('kaon')
+          .doc(i.toString())
+          .collection('fooditem')
+          .get();
 
-    // Extract food items from kaon/1 snapshot
-    for (var doc in snapshot1.docs) {
-      foods.add(
-          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
-    }
-
-    // Fetch data from kaon/2 collection
-    QuerySnapshot snapshot2 = await FirebaseFirestore.instance
-        .collection('kaon')
-        .doc('2')
-        .collection('fooditem')
-        .get();
-
-    // Extract food items from kaon/2 snapshot
-    for (var doc in snapshot2.docs) {
-      foods.add(
-          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
-    }
-
-    // Fetch data from kaon/3 collection
-    QuerySnapshot snapshot3 = await FirebaseFirestore.instance
-        .collection('kaon')
-        .doc('3')
-        .collection('fooditem')
-        .get();
-
-    // Extract food items from kaon/3 snapshot
-    for (var doc in snapshot3.docs) {
-      foods.add(
-          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
-    }
-
-    // Fetch data from kaon/4 collection
-    QuerySnapshot snapshot4 = await FirebaseFirestore.instance
-        .collection('kaon')
-        .doc('4')
-        .collection('fooditem')
-        .get();
-
-    // Extract food items from kaon/4 snapshot
-    for (var doc in snapshot4.docs) {
-      foods.add(
-          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+      // Extract food items from snapshot
+      for (var doc in snapshot.docs) {
+        foods.add(Food(
+            name: doc['name'],
+            vendor: doc['vendor'],
+            price: doc['price'],
+            category: doc['category']));
+      }
     }
 
     // Fetch data from kaon/5 collection
@@ -99,6 +71,9 @@ class _FoodPageState extends State<FoodPage> {
     foods
         .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
+    // Extract unique categories
+    categories = foods.map((food) => food.category).toSet().toList();
+
     setState(() {
       data = foods;
       // Assign searchResults to data initially to display all foods sorted by price
@@ -110,12 +85,25 @@ class _FoodPageState extends State<FoodPage> {
     setState(() {
       searchResults = data
           .where((food) =>
-              food.name.toLowerCase().contains(query.toLowerCase()) ||
-              food.vendor.toLowerCase().contains(query.toLowerCase()))
+              (selectedCategories.isEmpty ||
+                  selectedCategories.contains(food.category)) &&
+              (food.name.toLowerCase().contains(query.toLowerCase()) ||
+                  food.vendor.toLowerCase().contains(query.toLowerCase())))
           .toList();
       //Sort the searchResults based on price
       searchResults.sort(
           (a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
+    });
+  }
+
+  void onCategorySelected(bool selected, String category) {
+    setState(() {
+      if (selected) {
+        selectedCategories.add(category);
+      } else {
+        selectedCategories.remove(category);
+      }
+      onQueryChanged(''); // Re-filter based on the new category selection
     });
   }
 
@@ -125,6 +113,20 @@ class _FoodPageState extends State<FoodPage> {
       body: Column(
         children: [
           SearchBar(onQueryChanged: onQueryChanged),
+          SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Wrap(
+                spacing: 8.0,
+                children: categories
+                    .map((category) => FilterChip(
+                          label: Text(category),
+                          selected: selectedCategories.contains(category),
+                          onSelected: (selected) {
+                            onCategorySelected(selected, category);
+                          },
+                        ))
+                    .toList(),
+              )),
           Expanded(
             child: ListView.builder(
               itemCount: searchResults.length,
@@ -133,10 +135,15 @@ class _FoodPageState extends State<FoodPage> {
                   onTap: () {
                     Navigator.pushNamed(context, searchResults[index].vendor);
                   },
-                  child: ListTile(
-                    title: Text(searchResults[index].name),
-                    subtitle: Text(searchResults[index].vendor),
-                    trailing: Text("₱${searchResults[index].price}"),
+                  child: Container(
+                    color: index % 2 == 0
+                        ? Color.fromARGB(255, 237, 237, 237)
+                        : Colors.white, // Alternate colors
+                    child: ListTile(
+                      title: Text(searchResults[index].name),
+                      subtitle: Text(searchResults[index].vendor),
+                      trailing: Text("₱${searchResults[index].price}"),
+                    ),
                   ),
                 );
               },
@@ -166,8 +173,8 @@ class _SearchBarState extends State<SearchBar> {
         onChanged: widget.onQueryChanged,
         decoration: const InputDecoration(
           labelText: 'Search for food here',
-          border: const OutlineInputBorder(),
-          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(),
+          prefixIcon: Icon(Icons.search),
         ),
       ),
     );

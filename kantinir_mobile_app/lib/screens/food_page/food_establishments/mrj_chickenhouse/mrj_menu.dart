@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-
 class Food {
   final String name;
   final String vendor;
@@ -9,20 +8,27 @@ class Food {
   final String category;
   final String image_path;
 
-  Food({required this.name, required this.vendor, required this.price, required this.category, required this.image_path});
+  Food(
+      {required this.name,
+      required this.vendor,
+      required this.price,
+      required this.category,
+      required this.image_path});
 }
 
 class mrJChickenHouseCoffeeMenuPage extends StatefulWidget {
   const mrJChickenHouseCoffeeMenuPage({Key? key}) : super(key: key);
 
   @override
-  State<mrJChickenHouseCoffeeMenuPage> createState() => _mrJChickenHouseCoffeeMenuPageState();
+  State<mrJChickenHouseCoffeeMenuPage> createState() =>
+      _mrJChickenHouseCoffeeMenuPageState();
 }
 
-class _mrJChickenHouseCoffeeMenuPageState extends State<mrJChickenHouseCoffeeMenuPage> {
+class _mrJChickenHouseCoffeeMenuPageState
+    extends State<mrJChickenHouseCoffeeMenuPage> {
   late List<Food> data = [];
 
-   @override
+  @override
   void initState() {
     super.initState();
     fetchData();
@@ -31,18 +37,23 @@ class _mrJChickenHouseCoffeeMenuPageState extends State<mrJChickenHouseCoffeeMen
   void fetchData() async {
     List<Food> foods = [];
 
-  // Fetch data from kaon/2 collection
+    // Fetch data from kaon/2 collection
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('kaon')
         .doc('5')
         .collection('fooditem')
         .get();
-  // Extract food items from snapshot
-   snapshot.docs.forEach((doc) {
-     foods.add(Food(name: doc['name'], vendor: doc['vendor'], price: doc['price'], category: doc['category'], image_path: doc['image_path']));
-  });
+    // Extract food items from snapshot
+    snapshot.docs.forEach((doc) {
+      foods.add(Food(
+          name: doc['name'],
+          vendor: doc['vendor'],
+          price: doc['price'],
+          category: doc['category'],
+          image_path: doc['image_path']));
+    });
 
-  setState(() {
+    setState(() {
       data = foods;
     });
   }
@@ -66,74 +77,101 @@ class _mrJChickenHouseCoffeeMenuPageState extends State<mrJChickenHouseCoffeeMen
           String category = foodItemsByCategory.keys.elementAt(index);
           List<Food> items = foodItemsByCategory[category]!;
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  category,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    category,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                childAspectRatio: 1,
-                physics: NeverScrollableScrollPhysics(),
-                children: items.map((item) {
-                  return Card(
-  elevation: 4,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(8),
-    side: BorderSide(
-      color: Colors.grey,
-      width: 1,
-    ),
-  ),
-  child: Container(
-    padding: EdgeInsets.only(top: 8),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      image: DecorationImage(
-        image: AssetImage('images/mrj_items/${item.image_path}.jpg'),
-        fit: BoxFit.cover,
-      ),
-    ),
-    child: Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(width: double.infinity, height: 120), // Placeholder to maintain the height
-          SizedBox(width: 5,),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  SizedBox(height: 1,),
-                  Text(
-                    'Price: ₱${item.price}',
-                    style: TextStyle(fontSize: 10, color: Colors.white),
-                  ),
-                  //Room for more
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    ),
-  ),
-);
-                }).toList(),
-              )
-              ]
-          );
+                GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: items.map((item) {
+                    return Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.only(top: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'images/mrj_items/${item.image_path}.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  width: double.infinity,
+                                  height:
+                                      120), // Placeholder to maintain the height
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.name,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black,
+                                                offset: Offset(1, 1),
+                                                blurRadius: 2,
+                                              ),
+                                            ]),
+                                      ),
+                                      SizedBox(
+                                        height: 1,
+                                      ),
+                                      Text(
+                                        'Price: ₱${item.price}',
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black,
+                                                offset: Offset(1, 1),
+                                                blurRadius: 2,
+                                              ),
+                                            ]),
+                                      ),
+                                      //Room for more
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                )
+              ]);
         },
       ),
     );
