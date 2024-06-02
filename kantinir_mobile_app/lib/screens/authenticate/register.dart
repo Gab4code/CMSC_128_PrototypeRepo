@@ -2,6 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:kantinir_mobile_app/screens/home/home.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 
+// Define the email validator
+class EmailValidator implements StringValidator {
+  EmailValidator(this.label);
+  final String label;
+
+  @override
+  ValidationResult validate(String value, {List<String>? targets}) {
+    if (value.isEmpty) {
+      return ValidationResult(text: 'Please enter $label');
+    }
+
+    if (!_emailRegExp.hasMatch(value)) {
+      return ValidationResult(text: 'Please enter the correct $label');
+    }
+
+    return ValidationResult(isValid: true);
+  }
+}
+
+abstract class StringValidator {
+  ValidationResult validate(String value);
+}
+
+RegExp _emailRegExp = RegExp(
+  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+);
+
+class ValidationResult {
+  ValidationResult({this.isValid = false, this.text});
+  final bool isValid;
+  final String? text;
+}
+
 class Register extends StatefulWidget {
   final Function toggleView;
   Register({super.key, required this.toggleView});
@@ -35,6 +68,9 @@ class _RegisterState extends State<Register> {
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+
+  // Create an instance of EmailValidator
+  final EmailValidator emailValidator = EmailValidator('email');
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +135,8 @@ class _RegisterState extends State<Register> {
                       fontWeight: FontWeight.w400,
                     ),
                     validator: (val) {
-                      if (val!.isEmpty) {
-                        return 'Enter an email';
-                      } else if (!val.contains('@') || !val.contains('.com')) {
-                        return 'Enter a valid email';
-                      }
-                      return null;
+                      ValidationResult result = emailValidator.validate(val!);
+                      return result.isValid ? null : result.text;
                     },
                     onChanged: (val) {
                       setState(() => email = val);
