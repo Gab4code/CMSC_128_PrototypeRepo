@@ -47,6 +47,9 @@ class _housingPageState extends State<HousingPage> {
     if (newBudget > 15000) {
       _budgetController.text = '15000';
       newBudget = 15000;
+    } else if (newBudget < 0) {
+      _budgetController.text = '0';
+      newBudget = 0;
     }
     setState(() {
       _slider_minimum_budget = newBudget.clamp(0, 15000);
