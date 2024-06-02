@@ -63,8 +63,11 @@ class _FoodPageState extends State<FoodPage> {
 
     // Extract food items from kaon/5 snapshot
     for (var doc in snapshot5.docs) {
-      foods.add(
-          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price'], category: doc['category']));
+      foods.add(Food(
+          name: doc['name'],
+          vendor: doc['vendor'],
+          price: doc['price'],
+          category: doc['category']));
     }
 
     // Sort the foods list by price in ascending order
@@ -169,12 +172,15 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         onChanged: widget.onQueryChanged,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           labelText: 'Search for food here',
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+                20), // Adjust the value to make the edges rounder
+          ),
           prefixIcon: Icon(Icons.search),
         ),
       ),
