@@ -64,7 +64,7 @@ class _FoodPageState extends State<FoodPage> {
     // Extract food items from kaon/5 snapshot
     for (var doc in snapshot5.docs) {
       foods.add(
-          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price'], category: doc['category']));
     }
 
     // Sort the foods list by price in ascending order

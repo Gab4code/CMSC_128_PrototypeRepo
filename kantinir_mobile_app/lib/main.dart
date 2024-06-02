@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kantinir_mobile_app/map_test.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/authenticate.dart';
 import 'package:kantinir_mobile_app/screens/authenticate/sign_in.dart';
 import 'package:kantinir_mobile_app/screens/food_page/food_establishments/48coffee/48coffee.dart';
@@ -84,7 +85,9 @@ class MyApp extends StatelessWidget {
           }
         },
         debugShowCheckedModeBanner: false,
-        home: Onboarding1(),
+        home:
+        // MapPage(), 
+        Onboarding1(),
         routes: {
           '/profile': (context) => profilePage(),
         },

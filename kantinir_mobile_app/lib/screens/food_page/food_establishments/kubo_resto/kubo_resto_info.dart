@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class kuboRestoInfoPage extends StatefulWidget {
   const kuboRestoInfoPage({super.key});
@@ -15,6 +16,15 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
       return snapshot.data()?['averageRating'] as double?;
     }
     return null;
+  }
+
+   static const LatLng location =
+      LatLng(10.653040111908794, 122.22824011091275);
+
+  late GoogleMapController _controller;
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
   }
 
   @override
@@ -176,6 +186,23 @@ class _kuboRestoInfoPageState extends State<kuboRestoInfoPage> {
                   ],
                 ),
               ),
+              SizedBox(height: 5,),
+              Center(
+              child: Container(
+                  width: 340,
+                  height: 200,
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition:
+                        CameraPosition(target: location, zoom: 15),
+                    markers: {
+                      Marker(
+                          markerId: MarkerId("_targetLocation"),
+                          icon: BitmapDescriptor.defaultMarker,
+                          position: location),
+                    },
+                  )),
+            ),
           ],
         ),
       ),

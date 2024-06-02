@@ -132,7 +132,7 @@ class _coffee48MenuPageState extends State<coffee48MenuPage> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+                                            color: Colors.white,
                                             shadows: [
                                               Shadow(
                                                 color: Colors.black,
@@ -148,7 +148,7 @@ class _coffee48MenuPageState extends State<coffee48MenuPage> {
                                         'Price: ₱${item.price}',
                                         style: TextStyle(
                                             fontSize: 10,
-                                            color: Colors.black,
+                                            color: Colors.white,
                                             shadows: [
                                               Shadow(
                                                 color: Colors.black,

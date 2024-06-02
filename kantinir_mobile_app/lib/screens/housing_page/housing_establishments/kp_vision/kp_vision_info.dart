@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class kpVisionInfoPage extends StatefulWidget {
   const kpVisionInfoPage({super.key});
@@ -15,6 +16,15 @@ class _kpVisionInfoPageState extends State<kpVisionInfoPage> {
       return snapshot.data()?['averageRating'] as double?;
     }
     return null;
+  }
+
+  static const LatLng location =
+      LatLng(10.654375291531712, 122.23145595324026);
+
+  late GoogleMapController _controller;
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
   }
 
   @override
@@ -160,22 +170,23 @@ class _kpVisionInfoPageState extends State<kpVisionInfoPage> {
                 ],
               ),
             ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 20),
-            //   child: Row(
-            //     children: [
-            //       Icon(Icons.payment),
-            //       SizedBox(width: 5),
-            //       Expanded(
-            //         child: Text(
-            //           'Accepts payments thru Gcash and COD',
-            //           textAlign: TextAlign.left,
-            //           style: TextStyle(fontSize: 16),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            SizedBox(height: 5,),
+              Center(
+              child: Container(
+                  width: 340,
+                  height: 200,
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition:
+                        CameraPosition(target: location, zoom: 15),
+                    markers: {
+                      Marker(
+                          markerId: MarkerId("_targetLocation"),
+                          icon: BitmapDescriptor.defaultMarker,
+                          position: location),
+                    },
+                  )),
+            ),
         ],
       ),
     );

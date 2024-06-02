@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class elGarajeInfoPage extends StatefulWidget {
   const elGarajeInfoPage({super.key});
@@ -15,6 +16,15 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
       return snapshot.data()?['averageRating'] as double?;
     }
     return null;
+  }
+
+  static const LatLng location =
+      LatLng(10.642538230966712, 122.23808618022197);
+
+  late GoogleMapController _controller;
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
   }
 
   @override
@@ -175,6 +185,23 @@ class _elGarajeInfoPageState extends State<elGarajeInfoPage> {
                   ),
                 ],
               ),
+            ),
+            SizedBox(height: 5,),
+              Center(
+              child: Container(
+                  width: 340,
+                  height: 200,
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition:
+                        CameraPosition(target: location, zoom: 15),
+                    markers: {
+                      Marker(
+                          markerId: MarkerId("_targetLocation"),
+                          icon: BitmapDescriptor.defaultMarker,
+                          position: location),
+                    },
+                  )),
             ),
         ],
       ),
