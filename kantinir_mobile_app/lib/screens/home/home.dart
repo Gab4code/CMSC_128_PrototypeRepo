@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         FirebaseFirestore.instance.collection("kaon");
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 0, 146, 95),
+      // backgroundColor: Color.fromARGB(255, 0, 146, 95),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -44,6 +44,12 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: Color(0xFF11CDA7),
         elevation: 0.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20.0),
+            bottomRight: Radius.circular(20.0),
+          ),
+        ),
         actions: <Widget>[
           TextButton.icon(
             icon: Icon(Icons.person, color: Colors.white),
