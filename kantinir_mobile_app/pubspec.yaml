@@ -90,6 +90,11 @@ flutter:
     - images/aj_foodhub_items/
     - images/el_garaje_items/
     - images/mrj_items/
+    - images/arkids_items/
+    - images/kp_vision_items/
+    - images/royal_angels_items/
+    - images/gumamela_items/
+    - images/lampirong_items/
   
   
   # An image asset can refer to one or more resolution-specific "variants", see

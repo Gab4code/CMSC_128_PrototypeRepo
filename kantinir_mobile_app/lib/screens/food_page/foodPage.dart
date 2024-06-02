@@ -82,6 +82,19 @@ class _FoodPageState extends State<FoodPage> {
           Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
     }
 
+    // Fetch data from kaon/5 collection
+    QuerySnapshot snapshot5 = await FirebaseFirestore.instance
+        .collection('kaon')
+        .doc('5')
+        .collection('fooditem')
+        .get();
+
+    // Extract food items from kaon/5 snapshot
+    for (var doc in snapshot5.docs) {
+      foods.add(
+          Food(name: doc['name'], vendor: doc['vendor'], price: doc['price']));
+    }
+
     // Sort the foods list by price in ascending order
     foods
         .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
