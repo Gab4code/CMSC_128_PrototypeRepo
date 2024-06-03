@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kantinir_mobile_app/screens/authenticate/sign_in.dart';
 import 'package:kantinir_mobile_app/screens/home/profile_page.dart';
 import 'package:kantinir_mobile_app/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -71,7 +72,37 @@ class _HomePageState extends State<HomePage> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
-              await _auth.signOut();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Confirmation'),
+                    content: Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Logout'),
+                        onPressed: () async {
+                          await _auth.signOut();
+                          // Navigator.pushReplacement(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => SignInPage(
+                          //       toggleView: () {},
+                          //     ),
+                          //   ),
+                          // );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],
