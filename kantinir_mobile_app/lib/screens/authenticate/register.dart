@@ -277,7 +277,7 @@ class _RegisterState extends State<Register> {
                         _handleRegisterError,
                       );
                       if (result == null) {
-                        setState(() => error = 'Please supply a valid email');
+                        setState(() => error = 'Please supply valid details');
                       } else {
                         Navigator.pushReplacement(
                           context,

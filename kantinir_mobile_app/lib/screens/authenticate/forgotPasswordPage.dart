@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +23,11 @@ class _forgotPasswordPageState extends State<forgotPasswordPage> {
     String email = _emailController.text.trim();
 
     try {
-      var methods =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      if (methods.isEmpty) {
+      // var methods =
+      //     await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      QuerySnapshot query = await FirebaseFirestore.instance.collection('Users').where("email", isEqualTo: email).get();
+
+      if (query.docs.isNotEmpty) {
         // Email doesn't exist in Firebase
         showDialog(
           context: context,

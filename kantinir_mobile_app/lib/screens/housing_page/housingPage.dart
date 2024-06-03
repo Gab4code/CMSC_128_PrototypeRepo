@@ -296,7 +296,7 @@ class _housingPageState extends State<HousingPage> {
                 ),
               ),
               Container(
-                height: 348,
+                height: 512,
                 child: StreamBuilder<QuerySnapshot>(
                   stream: createQuery(_tinir).snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
